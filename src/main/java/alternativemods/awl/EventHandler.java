@@ -36,12 +36,12 @@ public class EventHandler {
         {
             GL11.glPushMatrix();
 
-            GL11.glDisable(3553);
+            GL11.glDisable(GL11.GL_TEXTURE_2D);
             GL11.glColor4f(1, 0, 0, 1);
-            GL11.glEnable(3042);
+            GL11.glEnable(GL11.GL_BLEND);
             GL11.glLineWidth(10);
 
-            GL11.glEnable(2848);
+            GL11.glEnable(GL11.GL_LINE_SMOOTH);
 
             GL11.glBegin(1);
 
@@ -63,18 +63,18 @@ public class EventHandler {
 
             GL11.glEnd();
 
-            GL11.glEnable(3553);
+            GL11.glEnable(GL11.GL_TEXTURE_2D);
             GL11.glPopMatrix();
         }
         if (!Main.wireManager.points.isEmpty() && playertmp.worldObj.provider.dimensionId == Main.wireManager.dimension) {
             GL11.glPushMatrix();
 
-            GL11.glDisable(3553);
+            GL11.glDisable(GL11.GL_TEXTURE_2D);
             GL11.glColor4d(1, 1, 1, 0.25);
-            GL11.glEnable(3042);
+            GL11.glEnable(GL11.GL_BLEND);
             GL11.glLineWidth(10);
 
-            GL11.glEnable(2848);
+            GL11.glEnable(GL11.GL_LINE_SMOOTH);
 
             GL11.glBegin(1);
 
@@ -89,7 +89,7 @@ public class EventHandler {
 
             GL11.glEnd();
 
-            GL11.glEnable(3553);
+            GL11.glEnable(GL11.GL_TEXTURE_2D);
             GL11.glPopMatrix();
         }
     }
