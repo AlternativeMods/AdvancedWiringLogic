@@ -39,7 +39,7 @@ public class ItemWiringTool extends Item {
         if(Main.wireManager.doingWire)
             Main.wireManager.addPoint(x, y, z);
         else
-            Main.wireManager.startWire(x, y, z);
+            Main.wireManager.startWire(x, y, z, world.provider.dimensionId);
 
         return true;
     }

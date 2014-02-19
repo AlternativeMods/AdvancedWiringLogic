@@ -15,11 +15,14 @@ import java.util.List;
 public class WireManager {
 
     public boolean doingWire;
+    private int dimension;
     public List<Point> points;
 
-    public void startWire(int x, int y, int z) {
+    public void startWire(int x, int y, int z, int dimension) {
         if(this.doingWire)
             return;
+
+        this.dimension = dimension;
 
         this.doingWire = true;
         this.points = new ArrayList<Point>();
@@ -54,7 +57,7 @@ public class WireManager {
             return;
         }
 
-        Main.wiresContainer.addWire(new Wire(this.points));
+        Main.wiresContainer.addWire(new Wire(this.points, this.dimension));
         Main.proxy.addClientChat("Finished the wire with " + this.points.size() + " points!");
     }
 

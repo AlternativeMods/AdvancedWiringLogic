@@ -10,15 +10,18 @@ import java.util.List;
  */
 public class Wire {
 
+    public int dimension;
     public List<Point> points;
 
-    public Wire(Point point) {
+    public Wire(Point point, int dimension) {
         this.points = new ArrayList<Point>();
         this.points.add(point);
+        this.dimension = dimension;
     }
 
-    public Wire(List<Point> points) {
+    public Wire(List<Point> points, int dimension) {
         this.points = points;
+        this.dimension = dimension;
     }
 
 }
