@@ -4,6 +4,7 @@ import alternativemods.awl.item.Items;
 import alternativemods.awl.manager.WireManager;
 import alternativemods.awl.manager.WiresContainer;
 import alternativemods.awl.proxy.CommonProxy;
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
@@ -39,6 +40,7 @@ public class Main {
         Items.initiate();
 
         MinecraftForge.EVENT_BUS.register(new EventHandler());
+        FMLCommonHandler.instance().bus().register(new EventHandler());
     }
 
     @Mod.EventHandler

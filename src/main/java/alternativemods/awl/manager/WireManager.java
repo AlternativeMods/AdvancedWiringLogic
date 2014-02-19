@@ -15,7 +15,7 @@ import java.util.List;
 public class WireManager {
 
     public boolean doingWire;
-    private int dimension;
+    public int dimension;
     public List<Point> points;
 
     public void startWire(int x, int y, int z, int dimension) {
@@ -36,6 +36,11 @@ public class WireManager {
                 return true;
 
         return false;
+    }
+
+    public void abortCreation() {
+        this.doingWire = false;
+        Main.proxy.addClientChat("Aborted wire-creation through dimension-change!");
     }
 
     public void addPoint(int x, int y, int z) {

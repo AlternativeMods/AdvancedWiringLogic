@@ -3,6 +3,7 @@ package alternativemods.awl;
 import alternativemods.awl.util.Point;
 import alternativemods.awl.util.Wire;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.PlayerEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
@@ -46,14 +47,16 @@ public class EventHandler {
 
             for (int i = 0; i < Main.wiresContainer.wires.size(); i++) {
                 Wire wire = Main.wiresContainer.wires.get(i);
-                if(!wire.points.isEmpty()) {
-                    int i2 = 0;
-                    while(i2 < wire.points.size() - 1) {
-                        Point tmp1 = wire.points.get(i2);
-                        Point tmp2 = wire.points.get(i2 + 1);
-                        GL11.glVertex3f((float)(tmp1.x - px + 0.5), (float) (tmp1.y - py + 0.5), (float)(tmp1.z - pz + 0.5));
-                        GL11.glVertex3f((float)(tmp2.x - px + 0.5), (float) (tmp2.y - py + 0.5), (float)(tmp2.z - pz + 0.5));
-                        i2++;
+                if(playertmp.worldObj.provider.dimensionId == wire.dimension) {
+                    if(!wire.points.isEmpty()) {
+                        int i2 = 0;
+                        while(i2 < wire.points.size() - 1) {
+                            Point tmp1 = wire.points.get(i2);
+                            Point tmp2 = wire.points.get(i2 + 1);
+                            GL11.glVertex3f((float)(tmp1.x - px + 0.5), (float) (tmp1.y - py + 0.5), (float)(tmp1.z - pz + 0.5));
+                            GL11.glVertex3f((float)(tmp2.x - px + 0.5), (float) (tmp2.y - py + 0.5), (float)(tmp2.z - pz + 0.5));
+                            i2++;
+                        }
                     }
                 }
             }
@@ -63,7 +66,7 @@ public class EventHandler {
             GL11.glEnable(3553);
             GL11.glPopMatrix();
         }
-        if (!Main.wireManager.points.isEmpty()) {
+        if (!Main.wireManager.points.isEmpty() && playertmp.worldObj.provider.dimensionId == Main.wireManager.dimension) {
             GL11.glPushMatrix();
 
             GL11.glDisable(3553);
@@ -89,6 +92,14 @@ public class EventHandler {
             GL11.glEnable(3553);
             GL11.glPopMatrix();
         }
+    }
+
+    @SubscribeEvent
+    public void playerChangeDimension(PlayerEvent.PlayerChangedDimensionEvent event) {
+        if(!event.player.worldObj.isRemote)
+            return;
+
+        Main.wireManager.abortCreation();
     }
 
 }
