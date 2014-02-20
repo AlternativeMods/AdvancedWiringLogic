@@ -3,6 +3,7 @@ package alternativemods.awl.manager;
 import alternativemods.awl.Main;
 import alternativemods.awl.util.Point;
 import alternativemods.awl.util.Wire;
+import net.minecraft.world.World;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,11 +29,19 @@ public class WiresContainer {
         this.wires.remove(wire);
     }
 
-    public boolean isWireStartingAt(Point point) {
+    public boolean isWireStartingAt(World world, Point point) {
         for(Wire wire : this.wires)
-            if(wire.points.get(0).equals(point))
+            if(world.provider.dimensionId == wire.dimension && wire.points.get(0).equals(point))
                 return true;
         return false;
+    }
+
+    public void notifyWireEnds(World world, Point point) {
+        for(Wire wire : this.wires)
+            if(world.provider.dimensionId == wire.dimension && wire.points.get(0).equals(point)) {
+                Point endPt = wire.points.get(wire.points.size() - 1);
+                world.notifyBlocksOfNeighborChange(endPt.x, endPt.y, endPt.z, world.getBlock(endPt.x, endPt.y, endPt.z));
+            }
     }
 
     public boolean isBlockPoweredByLogic(int x, int y, int z, int dimension) {
@@ -45,7 +54,7 @@ public class WiresContainer {
             if(wirePt.equals(pt)) {
                 Point startPoint = wire.points.get(0);
                 if(Main.logicContainer.isLogicAtPos(startPoint, dimension)) {
-                    System.out.println("MEEP");
+                    System.out.println(Main.logicContainer.isLogicPowered(startPoint, dimension));
                     return Main.logicContainer.isLogicPowered(startPoint, dimension);
                 }
             }
