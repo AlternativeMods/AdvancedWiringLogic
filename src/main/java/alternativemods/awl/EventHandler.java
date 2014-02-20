@@ -16,9 +16,21 @@ import org.lwjgl.opengl.GL11;
  */
 public class EventHandler {
 
+    private float calcDistance(float x, float y, float z, Point point) {
+        float dist = 0;
+
+        dist += x > point.x ? x - point.x : point.x - x;
+        dist += y > point.y ? y - point.y : point.y - y;
+        dist += z > point.z ? z - point.z : point.z- z;
+
+        return dist;
+    }
+
     @SubscribeEvent
     public void renderWorldLastEvent(RenderWorldLastEvent event) {
         EntityPlayer playertmp = Minecraft.getMinecraft().thePlayer;
+        if(playertmp.worldObj == null || playertmp.worldObj.provider == null)
+            return;
 
         float posX = (float)playertmp.posX;
         float posY = (float)playertmp.posY;
@@ -37,9 +49,9 @@ public class EventHandler {
             GL11.glPushMatrix();
 
             GL11.glDisable(GL11.GL_TEXTURE_2D);
-            GL11.glColor4f(1, 0, 0, 1);
+            GL11.glColor4f(0, 1, 0, 1);
             GL11.glEnable(GL11.GL_BLEND);
-            GL11.glLineWidth(10);
+            GL11.glLineWidth(2);
 
             GL11.glEnable(GL11.GL_LINE_SMOOTH);
 
@@ -53,8 +65,12 @@ public class EventHandler {
                         while(i2 < wire.points.size() - 1) {
                             Point tmp1 = wire.points.get(i2);
                             Point tmp2 = wire.points.get(i2 + 1);
-                            GL11.glVertex3f((float)(tmp1.x - px + 0.5), (float) (tmp1.y - py + 0.5), (float)(tmp1.z - pz + 0.5));
-                            GL11.glVertex3f((float)(tmp2.x - px + 0.5), (float) (tmp2.y - py + 0.5), (float)(tmp2.z - pz + 0.5));
+
+                            if(calcDistance(px, py, pz, tmp1) < 20) {
+                                GL11.glVertex3f((float)(tmp1.x - px + 0.5), (float) (tmp1.y - py + 0.5), (float)(tmp1.z - pz + 0.5));
+                                GL11.glVertex3f((float)(tmp2.x - px + 0.5), (float) (tmp2.y - py + 0.5), (float)(tmp2.z - pz + 0.5));
+                            }
+
                             i2++;
                         }
                     }
@@ -66,13 +82,13 @@ public class EventHandler {
             GL11.glEnable(GL11.GL_TEXTURE_2D);
             GL11.glPopMatrix();
         }
-        if (!Main.wireManager.points.isEmpty() && playertmp.worldObj.provider.dimensionId == Main.wireManager.dimension) {
+        if (Main.wireManager != null && Main.wireManager.points != null && !Main.wireManager.points.isEmpty() && playertmp.worldObj.provider.dimensionId == Main.wireManager.dimension) {
             GL11.glPushMatrix();
 
             GL11.glDisable(GL11.GL_TEXTURE_2D);
             GL11.glColor4d(1, 1, 1, 0.25);
             GL11.glEnable(GL11.GL_BLEND);
-            GL11.glLineWidth(10);
+            GL11.glLineWidth(2);
 
             GL11.glEnable(GL11.GL_LINE_SMOOTH);
 
@@ -82,8 +98,12 @@ public class EventHandler {
             while(i < Main.wireManager.points.size() - 1) {
                 Point tmp1 = Main.wireManager.points.get(i);
                 Point tmp2 = Main.wireManager.points.get(i + 1);
-                GL11.glVertex3f((float)(tmp1.x - px + 0.5), (float) (tmp1.y - py + 0.5), (float)(tmp1.z - pz + 0.5));
-                GL11.glVertex3f((float)(tmp2.x - px + 0.5), (float) (tmp2.y - py + 0.5), (float)(tmp2.z - pz + 0.5));
+
+                if(calcDistance(px, py, pz, tmp1) < 20) {
+                    GL11.glVertex3f((float)(tmp1.x - px + 0.5), (float) (tmp1.y - py + 0.5), (float)(tmp1.z - pz + 0.5));
+                    GL11.glVertex3f((float)(tmp2.x - px + 0.5), (float) (tmp2.y - py + 0.5), (float)(tmp2.z - pz + 0.5));
+                }
+
                 i++;
             }
 
@@ -92,6 +112,10 @@ public class EventHandler {
             GL11.glEnable(GL11.GL_TEXTURE_2D);
             GL11.glPopMatrix();
         }
+
+        /*if(Main.logicContainer != null)
+            if(!Main.logicContainer.logics.isEmpty())
+                System.out.println(Main.logicContainer.logics.get(0).isPowered());*/
     }
 
     @SubscribeEvent

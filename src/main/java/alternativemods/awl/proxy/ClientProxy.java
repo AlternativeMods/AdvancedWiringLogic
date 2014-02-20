@@ -1,5 +1,7 @@
 package alternativemods.awl.proxy;
 
+import alternativemods.awl.Main;
+import cpw.mods.fml.client.registry.ClientRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ChatComponentText;
 
@@ -10,8 +12,16 @@ import net.minecraft.util.ChatComponentText;
  */
 public class ClientProxy extends CommonProxy {
 
+    @Override
     public void addClientChat(String text) {
+        super.addClientChat(text);
         Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText(text));
+    }
+
+    @Override
+    public void registerKeyBindings() {
+        super.registerKeyBindings();
+        ClientRegistry.registerKeyBinding(Main.optionsKey);
     }
 
 }

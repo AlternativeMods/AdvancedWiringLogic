@@ -1,8 +1,10 @@
 package alternativemods.awl.manager;
 
 import alternativemods.awl.Main;
+import alternativemods.awl.logic.LogicMain;
 import alternativemods.awl.util.Point;
 import alternativemods.awl.util.Wire;
+import net.minecraft.world.World;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,10 +17,17 @@ import java.util.List;
 public class WireManager {
 
     public boolean doingWire;
-    public int dimension;
+    public int dimension = 0;
     public List<Point> points;
+    public LogicMain activeLogic;
 
-    public void startWire(int x, int y, int z, int dimension) {
+    public WireManager() {
+        this.doingWire = false;
+        this.points = null;
+        this.activeLogic = null;
+    }
+
+    public void startWire(World world, int x, int y, int z, int dimension) {
         if(this.doingWire)
             return;
 
@@ -27,7 +36,8 @@ public class WireManager {
         this.doingWire = true;
         this.points = new ArrayList<Point>();
         this.points.add(new Point(x, y, z));
-        Main.proxy.addClientChat("Starting a new wire!");
+        Main.proxy.addClientChat("Starting a new wire with logic \"" + activeLogic.getName() + "\"!");
+        this.activeLogic.setVars(world, x, y, z, dimension);
     }
 
     private boolean pointExists(Point point) {
@@ -64,6 +74,8 @@ public class WireManager {
 
         Main.wiresContainer.addWire(new Wire(this.points, this.dimension));
         Main.proxy.addClientChat("Finished the wire with " + this.points.size() + " points!");
+        this.points = null;
+        Main.logicContainer.addLogic(this.activeLogic);
     }
 
 }

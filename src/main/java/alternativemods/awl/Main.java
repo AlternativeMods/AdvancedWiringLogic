@@ -1,6 +1,7 @@
 package alternativemods.awl;
 
 import alternativemods.awl.item.Items;
+import alternativemods.awl.manager.LogicContainer;
 import alternativemods.awl.manager.WireManager;
 import alternativemods.awl.manager.WiresContainer;
 import alternativemods.awl.proxy.CommonProxy;
@@ -10,9 +11,11 @@ import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
+import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraftforge.common.MinecraftForge;
+import org.lwjgl.input.Keyboard;
 
 /**
  * Author: Lordmau5
@@ -29,8 +32,11 @@ public class Main {
         }
     };
 
+    public static KeyBinding optionsKey = new KeyBinding("Options", Keyboard.KEY_R, "Advanced Wiring Logic");
+
     public static WiresContainer wiresContainer;
     public static WireManager wireManager;
+    public static LogicContainer logicContainer;
 
     @SidedProxy(modId = "AWL", clientSide = "alternativemods.awl.proxy.ClientProxy", serverSide = "alternativemods.awl.proxy.CommonProxy")
     public static CommonProxy proxy;
@@ -38,6 +44,8 @@ public class Main {
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
         Items.initiate();
+
+        proxy.init();
 
         MinecraftForge.EVENT_BUS.register(new EventHandler());
         FMLCommonHandler.instance().bus().register(new EventHandler());
@@ -52,6 +60,7 @@ public class Main {
     public void serverStarting(FMLServerStartingEvent event) {
         wiresContainer = new WiresContainer();
         wireManager = new WireManager();
+        logicContainer = new LogicContainer();
     }
 
 }
