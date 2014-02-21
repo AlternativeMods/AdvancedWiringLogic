@@ -112,10 +112,6 @@ public class EventHandler {
             GL11.glEnable(GL11.GL_TEXTURE_2D);
             GL11.glPopMatrix();
         }
-
-        /*if(Main.logicContainer != null)
-            if(!Main.logicContainer.logics.isEmpty())
-                System.out.println(Main.logicContainer.logics.get(0).isPowered());*/
     }
 
     @SubscribeEvent

@@ -22,7 +22,6 @@ public class LogicContainer {
 
     public void addLogic(LogicMain logic) {
         this.logics.add(logic);
-        System.out.println(this.logics.size());
     }
 
     public void addLogic(LogicMain logic, World world, int x, int y, int z, int dimension) {

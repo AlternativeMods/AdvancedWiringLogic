@@ -4,6 +4,7 @@ import alternativemods.awl.item.Items;
 import alternativemods.awl.manager.LogicContainer;
 import alternativemods.awl.manager.WireManager;
 import alternativemods.awl.manager.WiresContainer;
+import alternativemods.awl.network.NetworkHandler;
 import alternativemods.awl.proxy.CommonProxy;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
@@ -43,6 +44,8 @@ public class Main {
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
+        NetworkHandler.registerChannels(event.getSide());
+
         Items.initiate();
 
         proxy.init();

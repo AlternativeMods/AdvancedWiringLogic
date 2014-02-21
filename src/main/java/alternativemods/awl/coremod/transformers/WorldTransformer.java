@@ -40,8 +40,14 @@ public class WorldTransformer implements IClassTransformer {
                             System.out.println("I'M IN!");
                             InsnList list = new InsnList();
 
+                            Label l1 = new Label();
+
+                            list.add(new FieldInsnNode(Opcodes.GETSTATIC, "alternativemods/awl/Main", "wiresContainer", "Lalternativemods/awl/manager/WiresContainer;"));
+                            list.add(new JumpInsnNode(Opcodes.IFNULL, new LabelNode(l1)));
+
                             list.add(new FieldInsnNode(Opcodes.GETSTATIC, "alternativemods/awl/Main", "wiresContainer", "Lalternativemods/awl/manager/WiresContainer;"));
 
+                            list.add(new VarInsnNode(Opcodes.ALOAD, 0));
                             list.add(new VarInsnNode(Opcodes.ILOAD, 1));
                             list.add(new VarInsnNode(Opcodes.ILOAD, 2));
                             list.add(new VarInsnNode(Opcodes.ILOAD, 3));
@@ -49,9 +55,8 @@ public class WorldTransformer implements IClassTransformer {
                             list.add(new VarInsnNode(Opcodes.ALOAD, 0));
                             list.add(new FieldInsnNode(Opcodes.GETFIELD, "net/minecraft/world/World", "provider", "Lnet/minecraft/world/WorldProvider;"));
                             list.add(new FieldInsnNode(Opcodes.GETFIELD, "net/minecraft/world/WorldProvider", "dimensionId", "I"));
-                            list.add(new MethodInsnNode(Opcodes.INVOKEVIRTUAL, "alternativemods/awl/manager/WiresContainer", "isBlockPoweredByLogic", "(IIII)Z"));
+                            list.add(new MethodInsnNode(Opcodes.INVOKEVIRTUAL, "alternativemods/awl/manager/WiresContainer", "isBlockPoweredByLogic", "(Lnet/minecraft/world/World;IIII)Z"));
 
-                            Label l1 = new Label();
                             list.add(new JumpInsnNode(Opcodes.IFEQ, new LabelNode(l1)));
 
                             list.add(new LdcInsnNode(15));
@@ -76,8 +81,14 @@ public class WorldTransformer implements IClassTransformer {
                             System.out.println("I'M IN!");
                             InsnList list = new InsnList();
 
+                            Label l1 = new Label();
+
+                            list.add(new FieldInsnNode(Opcodes.GETSTATIC, "alternativemods/awl/Main", "wiresContainer", "Lalternativemods/awl/manager/WiresContainer;"));
+                            list.add(new JumpInsnNode(Opcodes.IFNULL, new LabelNode(l1)));
+
                             list.add(new FieldInsnNode(Opcodes.GETSTATIC, "alternativemods/awl/Main", "wiresContainer", "Lalternativemods/awl/manager/WiresContainer;"));
 
+                            list.add(new VarInsnNode(Opcodes.ALOAD, 0));
                             list.add(new VarInsnNode(Opcodes.ILOAD, 1));
                             list.add(new VarInsnNode(Opcodes.ILOAD, 2));
                             list.add(new VarInsnNode(Opcodes.ILOAD, 3));
@@ -85,9 +96,8 @@ public class WorldTransformer implements IClassTransformer {
                             list.add(new VarInsnNode(Opcodes.ALOAD, 0));
                             list.add(new FieldInsnNode(Opcodes.GETFIELD, "net/minecraft/world/World", "provider", "Lnet/minecraft/world/WorldProvider;"));
                             list.add(new FieldInsnNode(Opcodes.GETFIELD, "net/minecraft/world/WorldProvider", "dimensionId", "I"));
-                            list.add(new MethodInsnNode(Opcodes.INVOKEVIRTUAL, "alternativemods/awl/manager/WiresContainer", "isBlockPoweredByLogic", "(IIII)Z"));
+                            list.add(new MethodInsnNode(Opcodes.INVOKEVIRTUAL, "alternativemods/awl/manager/WiresContainer", "isBlockPoweredByLogic", "(Lnet/minecraft/world/World;IIII)Z"));
 
-                            Label l1 = new Label();
                             list.add(new JumpInsnNode(Opcodes.IFEQ, new LabelNode(l1)));
 
                             list.add(new InsnNode(Opcodes.ICONST_1));
@@ -100,7 +110,7 @@ public class WorldTransformer implements IClassTransformer {
 
                     System.out.println("Patching Complete!");
                 }
-                if(m.name.equals("notifyBlockChange") && m.desc.equals("(IIILnet/minecraft/block/Block;)V")) {
+                if(m.name.equals("notifyBlocksOfNeighborChange") && m.desc.equals("(IIILnet/minecraft/block/Block;)V")) {
                     System.out.println(m.desc);
                     System.out.println("********* Inside target method 3!");
 
@@ -111,6 +121,11 @@ public class WorldTransformer implements IClassTransformer {
                         if(node.getOpcode() == Opcodes.ALOAD) {
                             System.out.println("I'M IN!");
                             InsnList list = new InsnList();
+
+                            Label l1 = new Label();
+
+                            list.add(new FieldInsnNode(Opcodes.GETSTATIC, "alternativemods/awl/Main", "wiresContainer", "Lalternativemods/awl/manager/WiresContainer;"));
+                            list.add(new JumpInsnNode(Opcodes.IFNULL, new LabelNode(l1)));
 
                             list.add(new FieldInsnNode(Opcodes.GETSTATIC, "alternativemods/awl/Main", "wiresContainer", "Lalternativemods/awl/manager/WiresContainer;"));
                             list.add(new VarInsnNode(Opcodes.ALOAD, 0));
@@ -123,7 +138,6 @@ public class WorldTransformer implements IClassTransformer {
                             list.add(new MethodInsnNode(Opcodes.INVOKESPECIAL, "alternativemods/awl/util/Point", "<init>", "(III)V"));
                             list.add(new MethodInsnNode(Opcodes.INVOKEVIRTUAL, "alternativemods/awl/manager/WiresContainer", "isWireStartingAt", "(Lnet/minecraft/world/World;Lalternativemods/awl/util/Point;)Z"));
 
-                            Label l1 = new Label();
                             list.add(new JumpInsnNode(Opcodes.IFEQ, new LabelNode(l1)));
 
                             list.add(new FieldInsnNode(Opcodes.GETSTATIC, "alternativemods/awl/Main", "wiresContainer", "Lalternativemods/awl/manager/WiresContainer;"));
@@ -145,6 +159,69 @@ public class WorldTransformer implements IClassTransformer {
                     System.out.println("Patching Complete!");
                 }
             }
+            ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES);
+            classNode.accept(cw);
+            return cw.toByteArray();
+        }
+        if(name.equals("net.minecraft.block.Block")) {
+            ClassNode classNode = new ClassNode();
+            ClassReader classReader = new ClassReader(basicClass);
+            classReader.accept(classNode, 0);
+
+            Iterator<MethodNode> methods = classNode.methods.iterator();
+            while(methods.hasNext()) {
+                MethodNode m = methods.next();
+
+                if (m.name.equals("onNeighborBlockChange") && m.desc.equals("(Lnet/minecraft/world/World;IIILnet/minecraft/block/Block;)V")) {
+                    System.out.println(m.desc);
+                    System.out.println("********* Inside target method!");
+
+                    Iterator iter = m.instructions.iterator();
+
+                    while (iter.hasNext()) {
+                        AbstractInsnNode node = (AbstractInsnNode) iter.next();
+                        if(node.getOpcode() == Opcodes.RETURN) {
+                            System.out.println("I'M IN!");
+                            InsnList list = new InsnList();
+
+                            Label l1 = new Label();
+
+                            list.add(new FieldInsnNode(Opcodes.GETSTATIC, "alternativemods/awl/Main", "wiresContainer", "Lalternativemods/awl/manager/WiresContainer;"));
+                            list.add(new JumpInsnNode(Opcodes.IFNULL, new LabelNode(l1)));
+
+                            list.add(new FieldInsnNode(Opcodes.GETSTATIC, "alternativemods/awl/Main", "wiresContainer", "Lalternativemods/awl/manager/WiresContainer;"));
+                            list.add(new VarInsnNode(Opcodes.ALOAD, 1));
+                            list.add(new TypeInsnNode(Opcodes.NEW, "alternativemods/awl/util/Point"));
+                            list.add(new InsnNode(Opcodes.DUP));
+
+                            list.add(new VarInsnNode(Opcodes.ILOAD, 2));
+                            list.add(new VarInsnNode(Opcodes.ILOAD, 3));
+                            list.add(new VarInsnNode(Opcodes.ILOAD, 4));
+                            list.add(new MethodInsnNode(Opcodes.INVOKESPECIAL, "alternativemods/awl/util/Point", "<init>", "(III)V"));
+                            list.add(new MethodInsnNode(Opcodes.INVOKEVIRTUAL, "alternativemods/awl/manager/WiresContainer", "isWireStartingAt", "(Lnet/minecraft/world/World;Lalternativemods/awl/util/Point;)Z"));
+
+                            list.add(new JumpInsnNode(Opcodes.IFEQ, new LabelNode(l1)));
+
+                            list.add(new FieldInsnNode(Opcodes.GETSTATIC, "alternativemods/awl/Main", "wiresContainer", "Lalternativemods/awl/manager/WiresContainer;"));
+                            list.add(new VarInsnNode(Opcodes.ALOAD, 1));
+                            list.add(new TypeInsnNode(Opcodes.NEW, "alternativemods/awl/util/Point"));
+                            list.add(new InsnNode(Opcodes.DUP));
+                            list.add(new VarInsnNode(Opcodes.ILOAD, 2));
+                            list.add(new VarInsnNode(Opcodes.ILOAD, 3));
+                            list.add(new VarInsnNode(Opcodes.ILOAD, 4));
+                            list.add(new MethodInsnNode(Opcodes.INVOKESPECIAL, "alternativemods/awl/util/Point", "<init>", "(III)V"));
+                            list.add(new MethodInsnNode(Opcodes.INVOKEVIRTUAL, "alternativemods/awl/manager/WiresContainer", "notifyWireEnds", "(Lnet/minecraft/world/World;Lalternativemods/awl/util/Point;)V"));
+
+                            list.add(new LabelNode(l1));
+                            m.instructions.insertBefore(node, list);
+                            break;
+                        }
+                    }
+
+                    System.out.println("Patching Complete!");
+                }
+            }
+
             ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES);
             classNode.accept(cw);
             return cw.toByteArray();

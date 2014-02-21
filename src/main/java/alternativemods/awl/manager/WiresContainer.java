@@ -3,6 +3,7 @@ package alternativemods.awl.manager;
 import alternativemods.awl.Main;
 import alternativemods.awl.util.Point;
 import alternativemods.awl.util.Wire;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.World;
 
 import java.util.ArrayList;
@@ -21,12 +22,22 @@ public class WiresContainer {
         this.wires = new ArrayList<Wire>();
     }
 
+    public void updateWirePoints(Wire wire) {
+        World world = MinecraftServer.getServer().worldServerForDimension(wire.dimension);
+        Point startPt = wire.points.get(0);
+        Point endPt = wire.points.get(wire.points.size() - 1);
+        world.markBlockForUpdate(startPt.x, startPt.y, startPt.z);
+        world.markBlockForUpdate(endPt.x, endPt.y, endPt.z);
+    }
+
     public void addWire(Wire wire) {
         this.wires.add(wire);
+        updateWirePoints(wire);
     }
 
     public void removeWire(Wire wire) {
         this.wires.remove(wire);
+        updateWirePoints(wire);
     }
 
     public boolean isWireStartingAt(World world, Point point) {
@@ -41,10 +52,14 @@ public class WiresContainer {
             if(world.provider.dimensionId == wire.dimension && wire.points.get(0).equals(point)) {
                 Point endPt = wire.points.get(wire.points.size() - 1);
                 world.notifyBlocksOfNeighborChange(endPt.x, endPt.y, endPt.z, world.getBlock(endPt.x, endPt.y, endPt.z));
+                world.notifyBlockChange(endPt.x, endPt.y, endPt.z + 1, world.getBlock(endPt.x, endPt.y, endPt.z + 1));
             }
     }
 
-    public boolean isBlockPoweredByLogic(int x, int y, int z, int dimension) {
+    public boolean isBlockPoweredByLogic(World world, int x, int y, int z, int dimension) {
+        if(world.isRemote)
+            return false;
+
         Point pt = new Point(x, y, z);
         if(this.wires.isEmpty())
             return false;
@@ -54,7 +69,6 @@ public class WiresContainer {
             if(wirePt.equals(pt)) {
                 Point startPoint = wire.points.get(0);
                 if(Main.logicContainer.isLogicAtPos(startPoint, dimension)) {
-                    System.out.println(Main.logicContainer.isLogicPowered(startPoint, dimension));
                     return Main.logicContainer.isLogicPowered(startPoint, dimension);
                 }
             }

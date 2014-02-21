@@ -2,6 +2,8 @@ package alternativemods.awl.manager;
 
 import alternativemods.awl.Main;
 import alternativemods.awl.logic.LogicMain;
+import alternativemods.awl.network.AWLPacket;
+import alternativemods.awl.network.NetworkHandler;
 import alternativemods.awl.util.Point;
 import alternativemods.awl.util.Wire;
 import net.minecraft.world.World;
@@ -72,10 +74,10 @@ public class WireManager {
             return;
         }
 
-        Main.wiresContainer.addWire(new Wire(this.points, this.dimension));
+        NetworkHandler.sendPacketToServer(new AWLPacket.Server.AddWire(new Wire(this.points, this.dimension)));
         Main.proxy.addClientChat("Finished the wire with " + this.points.size() + " points!");
         this.points = null;
-        Main.logicContainer.addLogic(this.activeLogic);
+        NetworkHandler.sendPacketToServer(new AWLPacket.Server.AddLogic(this.activeLogic));
     }
 
 }
