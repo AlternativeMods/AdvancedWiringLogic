@@ -6,10 +6,8 @@ import alternativemods.awl.util.Wire;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import org.lwjgl.opengl.GL11;
 
@@ -28,28 +26,6 @@ public class EventHandler {
         dist += z > point.z ? z - point.z : point.z- z;
 
         return dist;
-    }
-
-    @SubscribeEvent
-    public void renderHelmet(RenderGameOverlayEvent event) {
-        EntityPlayer playertmp = Minecraft.getMinecraft().thePlayer;
-        if(playertmp.worldObj == null || playertmp.worldObj.provider == null)
-            return;
-
-        ItemStack helmet = playertmp.getEquipmentInSlot(4);
-        if(helmet == null || !(helmet.getItem() == Items.wireHelmet))
-            return;
-
-        GL11.glPushMatrix();
-
-        GL11.glTranslatef(0, 0, -5);
-        GL11.glRotatef(0, 1, 0, 20f);
-
-        GL11.glEnable(GL11.GL_BLEND);
-        Gui.drawRect(50, 50, 200, 150, 0x44222222);
-        GL11.glDisable(GL11.GL_BLEND);
-
-        GL11.glPopMatrix();
     }
 
     @SubscribeEvent
@@ -142,6 +118,38 @@ public class EventHandler {
             GL11.glEnable(GL11.GL_TEXTURE_2D);
             GL11.glPopMatrix();
         }
+
+        //Interpolate the angles
+        float yaw = playertmp.prevRotationYaw + (playertmp.rotationYaw - playertmp.prevRotationYaw) * event.partialTicks;
+        float pitch = playertmp.prevRotationPitch + (playertmp.rotationPitch - playertmp.prevRotationPitch) * event.partialTicks;
+
+        GL11.glPushMatrix();
+
+        //Rotate the HUD for our head rotation
+        GL11.glRotatef(180 - yaw, 0, 1, 0);
+        GL11.glRotatef(- pitch, 1, 0, 0);
+        GL11.glTranslatef(-0.5f, -0.5f, -1);
+
+        //Start drawing quads
+        GL11.glEnable(GL11.GL_BLEND);
+        GL11.glColor4d(0.3, 0.3, 0.3, 0.4);
+        GL11.glDisable(GL11.GL_TEXTURE_2D);
+        GL11.glBegin(GL11.GL_QUADS);
+        //Draw inner part of the quad
+        GL11.glVertex2d(0, 0);
+        GL11.glVertex2d(1, 0);
+        GL11.glVertex2d(1, 1);
+        GL11.glVertex2d(0, 1);
+        //Draw outer part of the quad
+        GL11.glVertex2d(1, 0);
+        GL11.glVertex2d(0, 0);
+        GL11.glVertex2d(0, 1);
+        GL11.glVertex2d(1, 1);
+        GL11.glEnd();
+        GL11.glEnable(GL11.GL_TEXTURE_2D);
+        GL11.glDisable(GL11.GL_BLEND);
+
+        GL11.glPopMatrix();
     }
 
     @SubscribeEvent
