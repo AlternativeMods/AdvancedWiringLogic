@@ -29,15 +29,11 @@ public class WorldTransformer implements IClassTransformer {
                 MethodNode m = methods.next();
 
                 if (m.name.equals("getBlockPowerInput") && m.desc.equals("(III)I")) {
-                    System.out.println(m.desc);
-                    System.out.println("********* Inside target method 1!");
-
                     Iterator iter = m.instructions.iterator();
 
                     while (iter.hasNext()) {
                         AbstractInsnNode node = (AbstractInsnNode) iter.next();
                         if(node.getOpcode() == Opcodes.ICONST_0) {
-                            System.out.println("I'M IN!");
                             InsnList list = new InsnList();
 
                             Label l1 = new Label();
@@ -66,19 +62,13 @@ public class WorldTransformer implements IClassTransformer {
                             break;
                         }
                     }
-
-                    System.out.println("Patching Complete!");
                 }
                 if(m.name.equals("isBlockIndirectlyGettingPowered") && m.desc.equals("(III)Z")) {
-                    System.out.println(m.desc);
-                    System.out.println("********* Inside target method 2!");
-
                     Iterator iter = m.instructions.iterator();
 
                     while (iter.hasNext()) {
                         AbstractInsnNode node = (AbstractInsnNode) iter.next();
                         if(node.getOpcode() == Opcodes.ALOAD) {
-                            System.out.println("I'M IN!");
                             InsnList list = new InsnList();
 
                             Label l1 = new Label();
@@ -107,19 +97,13 @@ public class WorldTransformer implements IClassTransformer {
                             break;
                         }
                     }
-
-                    System.out.println("Patching Complete!");
                 }
                 if(m.name.equals("notifyBlocksOfNeighborChange") && m.desc.equals("(IIILnet/minecraft/block/Block;)V")) {
-                    System.out.println(m.desc);
-                    System.out.println("********* Inside target method 3!");
-
                     Iterator iter = m.instructions.iterator();
 
                     while (iter.hasNext()) {
                         AbstractInsnNode node = (AbstractInsnNode) iter.next();
                         if(node.getOpcode() == Opcodes.ALOAD) {
-                            System.out.println("I'M IN!");
                             InsnList list = new InsnList();
 
                             Label l1 = new Label();
@@ -155,10 +139,11 @@ public class WorldTransformer implements IClassTransformer {
                             break;
                         }
                     }
-
-                    System.out.println("Patching Complete!");
                 }
             }
+
+            System.out.println("Patched " + name + "!");
+
             ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES);
             classNode.accept(cw);
             return cw.toByteArray();
@@ -173,15 +158,11 @@ public class WorldTransformer implements IClassTransformer {
                 MethodNode m = methods.next();
 
                 if (m.name.equals("onNeighborBlockChange") && m.desc.equals("(Lnet/minecraft/world/World;IIILnet/minecraft/block/Block;)V")) {
-                    System.out.println(m.desc);
-                    System.out.println("********* Inside target method!");
-
                     Iterator iter = m.instructions.iterator();
 
                     while (iter.hasNext()) {
                         AbstractInsnNode node = (AbstractInsnNode) iter.next();
                         if(node.getOpcode() == Opcodes.RETURN) {
-                            System.out.println("I'M IN!");
                             InsnList list = new InsnList();
 
                             Label l1 = new Label();
@@ -217,10 +198,10 @@ public class WorldTransformer implements IClassTransformer {
                             break;
                         }
                     }
-
-                    System.out.println("Patching Complete!");
                 }
             }
+
+            System.out.println("Patched " + name + "!");
 
             ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES);
             classNode.accept(cw);
