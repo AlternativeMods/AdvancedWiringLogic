@@ -74,10 +74,10 @@ public class WireManager {
             return;
         }
 
+        NetworkHandler.sendPacketToServer(new AWLPacket.Server.AddLogic(this.activeLogic));
         NetworkHandler.sendPacketToServer(new AWLPacket.Server.AddWire(new Wire(this.points, this.dimension)));
         Main.proxy.addClientChat("Finished the wire with " + this.points.size() + " points!");
         this.points = null;
-        NetworkHandler.sendPacketToServer(new AWLPacket.Server.AddLogic(this.activeLogic));
     }
 
 }

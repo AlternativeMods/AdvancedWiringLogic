@@ -1,7 +1,7 @@
 package alternativemods.awl.item;
 
 import alternativemods.awl.Main;
-import alternativemods.awl.logic.LogicRedstone;
+import alternativemods.awl.logic.LogicNotGate;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -31,7 +31,7 @@ public class ItemWiringTool extends Item {
     }
 
     private void processWithKey(ItemStack is, EntityPlayer player, World world, int x, int y, int z) {
-        Main.wireManager.activeLogic = new LogicRedstone();
+        Main.wireManager.activeLogic = new LogicNotGate();
         Main.proxy.addClientChat("Set active logic to \"" + Main.wireManager.activeLogic.getName() + "\".");
     }
 

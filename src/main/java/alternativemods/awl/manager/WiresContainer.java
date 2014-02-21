@@ -26,12 +26,17 @@ public class WiresContainer {
         World world = MinecraftServer.getServer().worldServerForDimension(wire.dimension);
         Point startPt = wire.points.get(0);
         Point endPt = wire.points.get(wire.points.size() - 1);
+        world.notifyBlocksOfNeighborChange(startPt.x, startPt.y, startPt.z, world.getBlock(startPt.x, startPt.y, startPt.z));
+        world.notifyBlocksOfNeighborChange(endPt.x, endPt.y, endPt.z, world.getBlock(endPt.x, endPt.y, endPt.z));
         world.markBlockForUpdate(startPt.x, startPt.y, startPt.z);
         world.markBlockForUpdate(endPt.x, endPt.y, endPt.z);
     }
 
     public void addWire(Wire wire) {
         this.wires.add(wire);
+
+        System.out.println("Adding a wire!");
+
         updateWirePoints(wire);
     }
 

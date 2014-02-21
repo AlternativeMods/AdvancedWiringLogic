@@ -1,11 +1,15 @@
 package alternativemods.awl;
 
+import alternativemods.awl.item.Items;
 import alternativemods.awl.util.Point;
 import alternativemods.awl.util.Wire;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import org.lwjgl.opengl.GL11;
 
@@ -27,9 +31,35 @@ public class EventHandler {
     }
 
     @SubscribeEvent
+    public void renderHelmet(RenderGameOverlayEvent event) {
+        EntityPlayer playertmp = Minecraft.getMinecraft().thePlayer;
+        if(playertmp.worldObj == null || playertmp.worldObj.provider == null)
+            return;
+
+        ItemStack helmet = playertmp.getEquipmentInSlot(4);
+        if(helmet == null || !(helmet.getItem() == Items.wireHelmet))
+            return;
+
+        GL11.glPushMatrix();
+
+        GL11.glTranslatef(0, 0, -5);
+        GL11.glRotatef(0, 1, 0, 20f);
+
+        GL11.glEnable(GL11.GL_BLEND);
+        Gui.drawRect(50, 50, 200, 150, 0x44222222);
+        GL11.glDisable(GL11.GL_BLEND);
+
+        GL11.glPopMatrix();
+    }
+
+    @SubscribeEvent
     public void renderWorldLastEvent(RenderWorldLastEvent event) {
         EntityPlayer playertmp = Minecraft.getMinecraft().thePlayer;
         if(playertmp.worldObj == null || playertmp.worldObj.provider == null)
+            return;
+
+        ItemStack helmet = playertmp.getEquipmentInSlot(4);
+        if(helmet == null || !(helmet.getItem() == Items.wireHelmet))
             return;
 
         float posX = (float)playertmp.posX;

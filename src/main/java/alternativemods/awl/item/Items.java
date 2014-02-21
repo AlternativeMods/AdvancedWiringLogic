@@ -12,9 +12,11 @@ import net.minecraft.item.Item;
 public class Items {
 
     public static Item wireTool;
+    public static Item wireHelmet;
 
     public static void initiate() {
         wireTool = new ItemWiringTool();
+        wireHelmet = new ItemWiringHelmet();
 
         addToCreative();
         register();
@@ -22,10 +24,12 @@ public class Items {
 
     private static void addToCreative() {
         wireTool.setCreativeTab(Main.tab_AWL);
+        wireHelmet.setCreativeTab(Main.tab_AWL);
     }
 
     private static void register() {
         GameRegistry.registerItem(wireTool, "itemWiringTool");
+        GameRegistry.registerItem(wireHelmet, "itemWiringHelmet");
     }
 
 }
