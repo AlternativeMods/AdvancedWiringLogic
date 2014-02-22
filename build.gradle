@@ -24,7 +24,7 @@ buildscript {
 apply plugin: 'reening'
 apply plugin: 'forge'
 
-group = 'advwirelogic'
+group = 'alternativemods'
 version = '1.0.' + System.getenv("TRAVIS_BUILD_NUMBER")
 archivesBaseName = 'AdvancedWiringLogic'
 
