@@ -28,6 +28,8 @@ public class WiresContainer {
         Point endPt = wire.points.get(wire.points.size() - 1);
         world.notifyBlocksOfNeighborChange(startPt.x, startPt.y, startPt.z, world.getBlock(startPt.x, startPt.y, startPt.z));
         world.notifyBlocksOfNeighborChange(endPt.x, endPt.y, endPt.z, world.getBlock(endPt.x, endPt.y, endPt.z));
+        world.notifyBlockOfNeighborChange(startPt.x, startPt.y, startPt.z, world.getBlock(startPt.x, startPt.y, startPt.z));
+        world.notifyBlockOfNeighborChange(endPt.x, endPt.y, endPt.z, world.getBlock(endPt.x, endPt.y, endPt.z));
         world.markBlockForUpdate(startPt.x, startPt.y, startPt.z);
         world.markBlockForUpdate(endPt.x, endPt.y, endPt.z);
     }
@@ -57,7 +59,8 @@ public class WiresContainer {
             if(world.provider.dimensionId == wire.dimension && wire.points.get(0).equals(point)) {
                 Point endPt = wire.points.get(wire.points.size() - 1);
                 world.notifyBlocksOfNeighborChange(endPt.x, endPt.y, endPt.z, world.getBlock(endPt.x, endPt.y, endPt.z));
-                world.notifyBlockChange(endPt.x, endPt.y, endPt.z + 1, world.getBlock(endPt.x, endPt.y, endPt.z + 1));
+                world.notifyBlockOfNeighborChange(endPt.x, endPt.y, endPt.z, world.getBlock(endPt.x, endPt.y, endPt.z));
+                world.markBlockForUpdate(endPt.x, endPt.y, endPt.z);
             }
     }
 
