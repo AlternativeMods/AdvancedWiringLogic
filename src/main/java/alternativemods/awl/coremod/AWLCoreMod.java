@@ -9,9 +9,9 @@ import java.util.Map;
  * Date: 20.02.14
  * Time: 16:47
  */
-@IFMLLoadingPlugin.Name("AWL")
+@IFMLLoadingPlugin.Name("AWL|Core")
 @IFMLLoadingPlugin.MCVersion("1.7.2")
-@IFMLLoadingPlugin.TransformerExclusions({"alternativemods.awl.coremod.transformers.", "alternativemods.awl.coremod.asm."})
+@IFMLLoadingPlugin.TransformerExclusions({"alternativemods.awl.coremod.transformers."})
 @SuppressWarnings("unused")
 public class AWLCoreMod implements IFMLLoadingPlugin {
 

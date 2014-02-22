@@ -5,25 +5,36 @@ buildscript {
             name = "forge"
             url = "http://files.minecraftforge.net/maven"
         }
-		maven {
+        maven {
             name = "sonatype"
             url = "https://oss.sonatype.org/content/repositories/snapshots/"
         }
+        maven {
+            name = "reening"
+            url = "http://maven.reening.nl"
+        }
     }
     dependencies {
+        classpath 'com.jcraft:jsch:0.1.50'
         classpath 'net.minecraftforge.gradle:ForgeGradle:1.1-SNAPSHOT'
+        classpath 'jk_5.gradle:ReeningGradleUpload:0.1-SNAPSHOT'
     }
 }
 
+apply plugin: 'reening'
 apply plugin: 'forge'
 
 group = 'advwirelogic'
-version = '1.0-SNAPSHOT'
+version = '1.0.' + System.getenv("TRAVIS_BUILD_NUMBER")
 archivesBaseName = 'AdvancedWiringLogic'
 
 minecraft {
     assetDir = "runtime/client/assets"
     version = '1.7.2-10.12.0.1029'
+}
+
+reening {
+    password = System.getenv("MAVENPASSWORD")
 }
 
 repositories {
@@ -32,4 +43,25 @@ repositories {
         name = "reening"
         url = "http://maven.reening.nl"
     }
+}
+
+jar {
+    classifier = 'universal'
+    version = "${project.minecraft.version}-${project.version}"
+}
+
+task sourceJar(type: Jar) {
+    from sourceSets.main.allSource
+    classifier = 'sources'
+    version = "${project.minecraft.version}-${project.version}"
+}
+
+task deobfJar(type: Jar) {
+    from sourceSets.main.output
+    classifier = 'deobf'
+    version = "${project.minecraft.version}-${project.version}"
+}
+
+artifacts {
+    archives sourceJar, deobfJar
 }

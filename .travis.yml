@@ -1,0 +1,10 @@
+language: java
+install: TERM=dumb gradle setupCIWorkspace
+script: TERM=dumb gradle build
+after_success:
+- TERM=dumb gradle upload
+notifications:
+  webhooks:
+  - http://n.tkte.ch/h/2163/634fkARDqQVRszpNjimSxVMV
+dd:
+  secure: NhwA0dPud6BTqcQ8PX6RG3+Rz4LzDl9WKE9EiRWLVobN2offGcky74VR2OXFhDDptVHvRgQho5kJc9x6IdCuO8khL3ujMvc4HdkqwZpOW3wxnkEvcHkjZFw5ZnEs0/F8akKAWI4G5VEh8cMPH5+G1Me9lKzL5EDYvHyGX2ExZOk=
