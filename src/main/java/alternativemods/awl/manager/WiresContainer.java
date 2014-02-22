@@ -71,7 +71,7 @@ public class WiresContainer {
             }
             else {
                 Point nextPossible = wire.points.get(wire.points.size() - 1);
-                if(world.isAirBlock(nextPossible.x, nextPossible.y, nextPossible.z)) {
+                if(world.isAirBlock(nextPossible.x, nextPossible.y, nextPossible.z) || !world.getBlock(nextPossible.x, nextPossible.y, nextPossible.z).isOpaqueCube()) {
                     shortenWires(world, nextPossible);
                 }
             }
