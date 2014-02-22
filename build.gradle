@@ -48,18 +48,42 @@ repositories {
 jar {
     classifier = 'universal'
     version = "${project.minecraft.version}-${project.version}"
+    manifest{
+        attributes 'Name': 'alternativemods/awl/'
+        attributes 'Implementation-Title': 'Advanced Wiring Logic'
+        attributes 'Implementation-Version': project.version
+        attributes 'Implementation-Vendor': 'AlternativeMods'
+        attributes 'FMLCorePlugin': 'alternativemods.awl.coremod.AWLCoreMod'
+        attributes 'FMLCorePluginContainsFMLMod': 'true'
+    }
 }
 
 task sourceJar(type: Jar) {
     from sourceSets.main.allSource
     classifier = 'sources'
     version = "${project.minecraft.version}-${project.version}"
+    manifest{
+        attributes 'Name': 'alternativemods/awl/'
+        attributes 'Implementation-Title': 'Advanced Wiring Logic'
+        attributes 'Implementation-Version': project.version
+        attributes 'Implementation-Vendor': 'AlternativeMods'
+        attributes 'FMLCorePlugin': 'alternativemods.awl.coremod.AWLCoreMod'
+        attributes 'FMLCorePluginContainsFMLMod': 'true'
+    }
 }
 
 task deobfJar(type: Jar) {
     from sourceSets.main.output
     classifier = 'deobf'
     version = "${project.minecraft.version}-${project.version}"
+    manifest{
+        attributes 'Name': 'alternativemods/awl/'
+        attributes 'Implementation-Title': 'Advanced Wiring Logic'
+        attributes 'Implementation-Version': project.version
+        attributes 'Implementation-Vendor': 'AlternativeMods'
+        attributes 'FMLCorePlugin': 'alternativemods.awl.coremod.AWLCoreMod'
+        attributes 'FMLCorePluginContainsFMLMod': 'true'
+    }
 }
 
 artifacts {
