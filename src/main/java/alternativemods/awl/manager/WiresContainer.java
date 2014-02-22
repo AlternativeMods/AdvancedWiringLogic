@@ -28,16 +28,51 @@ public class WiresContainer {
         Point endPt = wire.points.get(wire.points.size() - 1);
         world.notifyBlocksOfNeighborChange(startPt.x, startPt.y, startPt.z, world.getBlock(startPt.x, startPt.y, startPt.z));
         world.notifyBlocksOfNeighborChange(endPt.x, endPt.y, endPt.z, world.getBlock(endPt.x, endPt.y, endPt.z));
+        world.notifyBlockOfNeighborChange(startPt.x, startPt.y, startPt.z, world.getBlock(startPt.x, startPt.y, startPt.z));
+        world.notifyBlockOfNeighborChange(endPt.x, endPt.y, endPt.z, world.getBlock(endPt.x, endPt.y, endPt.z));
         world.markBlockForUpdate(startPt.x, startPt.y, startPt.z);
         world.markBlockForUpdate(endPt.x, endPt.y, endPt.z);
     }
 
     public void addWire(Wire wire) {
         this.wires.add(wire);
-
-        System.out.println("Adding a wire!");
-
         updateWirePoints(wire);
+    }
+
+    public void removeWires(Point startPoint) {
+        List<Wire> toRemove = new ArrayList<Wire>();
+        for(Wire wire : this.wires) {
+            if(wire.points.get(0).equals(startPoint)) {
+                toRemove.add(wire);
+            }
+        }
+        for(Wire wire : toRemove) {
+            this.wires.remove(wire);
+            updateWirePoints(wire);
+        }
+    }
+
+    public void shortenWires(World world, Point endPoint) {
+        List<Wire> toShorten = new ArrayList<Wire>();
+        for(Wire wire : this.wires) {
+            if(wire.points.get(wire.points.size() - 1).equals(endPoint)) {
+                toShorten.add(wire);
+            }
+        }
+        for(Wire wire : toShorten) {
+            Wire oldWire = wire;
+            wire.points.remove(wire.points.get(wire.points.size() - 1));
+            if(wire.points.size() == 1) {
+                this.wires.remove(wire);
+                updateWirePoints(oldWire);
+            }
+            else {
+                Point nextPossible = wire.points.get(wire.points.size() - 1);
+                if(world.isAirBlock(nextPossible.x, nextPossible.y, nextPossible.z) || !world.getBlock(nextPossible.x, nextPossible.y, nextPossible.z).isOpaqueCube()) {
+                    shortenWires(world, nextPossible);
+                }
+            }
+        }
     }
 
     public void removeWire(Wire wire) {
@@ -52,12 +87,20 @@ public class WiresContainer {
         return false;
     }
 
+    public boolean isWireEndingAt(World world, Point point) {
+        for(Wire wire : this.wires)
+            if(world.provider.dimensionId == wire.dimension && wire.points.get(wire.points.size() - 1).equals(point))
+                return true;
+        return false;
+    }
+
     public void notifyWireEnds(World world, Point point) {
         for(Wire wire : this.wires)
             if(world.provider.dimensionId == wire.dimension && wire.points.get(0).equals(point)) {
                 Point endPt = wire.points.get(wire.points.size() - 1);
                 world.notifyBlocksOfNeighborChange(endPt.x, endPt.y, endPt.z, world.getBlock(endPt.x, endPt.y, endPt.z));
-                world.notifyBlockChange(endPt.x, endPt.y, endPt.z + 1, world.getBlock(endPt.x, endPt.y, endPt.z + 1));
+                world.notifyBlockOfNeighborChange(endPt.x, endPt.y, endPt.z, world.getBlock(endPt.x, endPt.y, endPt.z));
+                world.markBlockForUpdate(endPt.x, endPt.y, endPt.z);
             }
     }
 
@@ -74,7 +117,8 @@ public class WiresContainer {
             if(wirePt.equals(pt)) {
                 Point startPoint = wire.points.get(0);
                 if(Main.logicContainer.isLogicAtPos(startPoint, dimension)) {
-                    return Main.logicContainer.isLogicPowered(startPoint, dimension);
+                    if(Main.logicContainer.isLogicPowered(startPoint, dimension))
+                        return true;
                 }
             }
         }

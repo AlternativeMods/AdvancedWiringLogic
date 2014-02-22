@@ -6,6 +6,7 @@ import alternativemods.awl.network.AWLPacket;
 import alternativemods.awl.network.NetworkHandler;
 import alternativemods.awl.util.Point;
 import alternativemods.awl.util.Wire;
+import net.minecraft.client.Minecraft;
 import net.minecraft.world.World;
 
 import java.util.ArrayList;
@@ -71,6 +72,16 @@ public class WireManager {
         this.doingWire = false;
         if(this.points.size() < 2) {
             Main.proxy.addClientChat("Only got one point - Aborting wire-creation!");
+            this.points = null;
+            return;
+        }
+        World world = Minecraft.getMinecraft().theWorld;
+        Point stPoint = this.points.get(0);
+        Point endPoint = this.points.get(this.points.size() - 1);
+        if(world.isAirBlock(stPoint.x, stPoint.y, stPoint.z) || !world.getBlock(stPoint.x, stPoint.y, stPoint.z).isOpaqueCube() ||
+           world.isAirBlock(endPoint.x, endPoint.y, endPoint.z) || !world.getBlock(endPoint.x, endPoint.y, endPoint.z).isOpaqueCube()     ) {
+            Main.proxy.addClientChat("Start or end point is corrupted - Aborting wire-creation!");
+            this.points = null;
             return;
         }
 

@@ -6,9 +6,11 @@ import alternativemods.awl.util.Wire;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
+import net.minecraftforge.event.world.BlockEvent;
 import org.lwjgl.opengl.GL11;
 
 /**
@@ -119,6 +121,8 @@ public class EventHandler {
             GL11.glPopMatrix();
         }
 
+        FontRenderer rnd = Minecraft.getMinecraft().fontRenderer;
+
         //Interpolate the angles
         float yaw = playertmp.prevRotationYaw + (playertmp.rotationYaw - playertmp.prevRotationYaw) * event.partialTicks;
         float pitch = playertmp.prevRotationPitch + (playertmp.rotationPitch - playertmp.prevRotationPitch) * event.partialTicks;
@@ -126,9 +130,43 @@ public class EventHandler {
         GL11.glPushMatrix();
 
         //Rotate the HUD for our head rotation
+        // Left Box
         GL11.glRotatef(180 - yaw, 0, 1, 0);
         GL11.glRotatef(- pitch, 1, 0, 0);
-        GL11.glTranslatef(-0.5f, -0.5f, -1);
+        GL11.glTranslatef(-1.4f, -0.25f, -0.75f);
+        GL11.glRotatef(30, 0, 1, 0);
+
+        //Start drawing quads
+        GL11.glEnable(GL11.GL_BLEND);
+        GL11.glColor4d(0.3, 0.3, 0.3, 0.4);
+        GL11.glDisable(GL11.GL_TEXTURE_2D);
+        GL11.glBegin(GL11.GL_QUADS);
+        //Draw inner part of the quad
+        GL11.glVertex2d(0, 0);
+        GL11.glVertex2d(1, 0);
+        GL11.glVertex2d(1, 1);
+        GL11.glVertex2d(0, 1);
+        //Draw outer part of the quad
+        GL11.glVertex2d(1, 0);
+        GL11.glVertex2d(0, 0);
+        GL11.glVertex2d(0, 1);
+        GL11.glVertex2d(1, 1);
+        GL11.glEnd();
+
+        GL11.glEnable(GL11.GL_TEXTURE_2D);
+        rnd.drawString("Text text", 100, 100, 0xFFFFFFFF);
+        GL11.glDisable(GL11.GL_BLEND);
+
+        GL11.glPopMatrix();
+
+        //-------------------------------------
+        // Right Box
+        GL11.glPushMatrix();
+
+        GL11.glRotatef(180 - yaw, 0, 1, 0);
+        GL11.glRotatef(- pitch, 1, 0, 0);
+        GL11.glTranslatef(0.52f, -0.25f, -1.25f);
+        GL11.glRotatef(-30, 0, 1, 0);
 
         //Start drawing quads
         GL11.glEnable(GL11.GL_BLEND);
@@ -158,6 +196,18 @@ public class EventHandler {
             return;
 
         Main.wireManager.abortCreation();
+    }
+
+    @SubscribeEvent
+    public void blockBreak(BlockEvent.BreakEvent event) {
+        if(event.world.isRemote)
+            return;
+
+        Point brokenPoint = new Point(event.x, event.y, event.z);
+        if(Main.wiresContainer.isWireStartingAt(event.world, brokenPoint))
+            Main.wiresContainer.removeWires(brokenPoint);
+        if(Main.wiresContainer.isWireEndingAt(event.world, brokenPoint))
+            Main.wiresContainer.shortenWires(event.world, brokenPoint);
     }
 
 }
