@@ -42,6 +42,42 @@ public class WiresContainer {
         updateWirePoints(wire);
     }
 
+    public void removeWires(Point startPoint) {
+        List<Wire> toRemove = new ArrayList<Wire>();
+        for(Wire wire : this.wires) {
+            if(wire.points.get(0).equals(startPoint)) {
+                toRemove.add(wire);
+            }
+        }
+        for(Wire wire : toRemove) {
+            this.wires.remove(wire);
+            updateWirePoints(wire);
+        }
+    }
+
+    public void shortenWires(World world, Point endPoint) {
+        List<Wire> toShorten = new ArrayList<Wire>();
+        for(Wire wire : this.wires) {
+            if(wire.points.get(wire.points.size() - 1).equals(endPoint)) {
+                toShorten.add(wire);
+            }
+        }
+        for(Wire wire : toShorten) {
+            Wire oldWire = wire;
+            wire.points.remove(wire.points.get(wire.points.size() - 1));
+            if(wire.points.size() == 1) {
+                this.wires.remove(wire);
+                updateWirePoints(oldWire);
+            }
+            else {
+                Point nextPossible = wire.points.get(wire.points.size() - 1);
+                if(world.isAirBlock(nextPossible.x, nextPossible.y, nextPossible.z)) {
+                    shortenWires(world, nextPossible);
+                }
+            }
+        }
+    }
+
     public void removeWire(Wire wire) {
         this.wires.remove(wire);
         updateWirePoints(wire);
@@ -50,6 +86,13 @@ public class WiresContainer {
     public boolean isWireStartingAt(World world, Point point) {
         for(Wire wire : this.wires)
             if(world.provider.dimensionId == wire.dimension && wire.points.get(0).equals(point))
+                return true;
+        return false;
+    }
+
+    public boolean isWireEndingAt(World world, Point point) {
+        for(Wire wire : this.wires)
+            if(world.provider.dimensionId == wire.dimension && wire.points.get(wire.points.size() - 1).equals(point))
                 return true;
         return false;
     }

@@ -55,6 +55,10 @@ public class ItemWiringTool extends Item {
             return true;
         }
 
+        if(!world.getBlock(x, y, z).isOpaqueCube()) {
+            Main.proxy.addClientChat("Point has to be a full block! - Aborting!");
+            return true;
+        }
         if(Main.wireManager.doingWire)
             Main.wireManager.addPoint(x, y, z);
         else

@@ -10,6 +10,7 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
+import net.minecraftforge.event.world.BlockEvent;
 import org.lwjgl.opengl.GL11;
 
 /**
@@ -153,6 +154,7 @@ public class EventHandler {
         GL11.glEnd();
 
         GL11.glEnable(GL11.GL_TEXTURE_2D);
+        rnd.drawString("Text text", 100, 100, 0xFFFFFFFF);
         GL11.glDisable(GL11.GL_BLEND);
 
         GL11.glPopMatrix();
@@ -194,6 +196,18 @@ public class EventHandler {
             return;
 
         Main.wireManager.abortCreation();
+    }
+
+    @SubscribeEvent
+    public void blockBreak(BlockEvent.BreakEvent event) {
+        if(event.world.isRemote)
+            return;
+
+        Point brokenPoint = new Point(event.x, event.y, event.z);
+        if(Main.wiresContainer.isWireStartingAt(event.world, brokenPoint))
+            Main.wiresContainer.removeWires(brokenPoint);
+        if(Main.wiresContainer.isWireEndingAt(event.world, brokenPoint))
+            Main.wiresContainer.shortenWires(event.world, brokenPoint);
     }
 
 }
