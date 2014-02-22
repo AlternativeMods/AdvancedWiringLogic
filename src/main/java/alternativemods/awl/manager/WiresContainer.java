@@ -36,9 +36,6 @@ public class WiresContainer {
 
     public void addWire(Wire wire) {
         this.wires.add(wire);
-
-        System.out.println("Adding a wire!");
-
         updateWirePoints(wire);
     }
 
@@ -120,7 +117,8 @@ public class WiresContainer {
             if(wirePt.equals(pt)) {
                 Point startPoint = wire.points.get(0);
                 if(Main.logicContainer.isLogicAtPos(startPoint, dimension)) {
-                    return Main.logicContainer.isLogicPowered(startPoint, dimension);
+                    if(Main.logicContainer.isLogicPowered(startPoint, dimension))
+                        return true;
                 }
             }
         }
