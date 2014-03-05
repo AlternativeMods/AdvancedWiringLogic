@@ -25,7 +25,7 @@ public class TileEntityLogic extends TileEntity {
     public void readFromNBT(NBTTagCompound tag) {
         super.readFromNBT(tag);
 
-        this.logic = Main.logicRegister.convertLogic(tag.getString("Logic"));
+        this.logic = Main.logicRegister.getLogicFromName(tag.getString("Logic"));
     }
 
     @Override

@@ -4,6 +4,8 @@ import alternativemods.awl.Main;
 import alternativemods.awl.util.Point;
 import net.minecraft.world.World;
 
+import java.util.Arrays;
+
 /**
  * Author: Lordmau5
  * Date: 20.02.14
@@ -18,7 +20,7 @@ public abstract class LogicMain implements ILogic {
     public int dimension;
 
     public LogicMain() {
-        Main.logicRegister.registerLogic(this);
+        Main.logicRegister.register(this);
     }
 
     public void work() {}
@@ -31,12 +33,12 @@ public abstract class LogicMain implements ILogic {
         this.dimension = dimension;
     }
 
-    public int[] getPosition() {
+    public int[] getPosition(){
         return new int[] {this.x, this.y, this.z, this.dimension};
     }
 
     public boolean equals(LogicMain logic) {
-        return this.getPosition() == logic.getPosition();
+        return Arrays.equals(this.getPosition(), logic.getPosition());
     }
 
     public boolean positionEquals(int x, int y, int z, int dimension) {
@@ -55,4 +57,14 @@ public abstract class LogicMain implements ILogic {
         return "Logic Main";
     }
 
+    @Override
+    public String toString(){
+        return this.getClass().getSimpleName() + "{" +
+                "world=" + world +
+                ", x=" + x +
+                ", y=" + y +
+                ", z=" + z +
+                ", dimension=" + dimension +
+                '}';
+    }
 }

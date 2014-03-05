@@ -21,10 +21,9 @@ public class LogicContainer {
     }
 
     public void addLogic(LogicMain logic) {
-        if(isLogicAtPos(logic.x, logic.y, logic.z, logic.dimension))
-            return;
-
-        this.logics.add(logic);
+        if(!isLogicAtPos(logic.x, logic.y, logic.z, logic.dimension)){
+            this.logics.add(logic);
+        }
     }
 
     public void addLogic(LogicMain logic, World world, int x, int y, int z, int dimension) {

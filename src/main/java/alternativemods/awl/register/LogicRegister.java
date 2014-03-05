@@ -2,8 +2,9 @@ package alternativemods.awl.register;
 
 import alternativemods.awl.logic.ILogic;
 import alternativemods.awl.logic.LogicMain;
+import com.google.common.collect.Lists;
 
-import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -13,28 +14,33 @@ import java.util.List;
  */
 public class LogicRegister {
 
-    private List<ILogic> logics = new ArrayList<ILogic>();
+    private List<ILogic> logics = Lists.newArrayList();
 
-    public void registerLogic(LogicMain logicClass) {
-        this.logics.add(logicClass);
+    public void register(LogicMain logic){
+        this.logics.add(logic);
     }
 
-    public ILogic convertLogic(String name) {
-        for(ILogic logic : this.logics)
-            if(logic.getName().equals(name))
+    public ILogic getLogicFromName(String name){
+        for(ILogic logic : this.logics){
+            if(logic.getName().equals(name)){
                 return logic;
+            }
+        }
         return null;
     }
 
-    public ILogic getNextLogic(LogicMain currentLogic) {
-        for(int i=0; i<this.logics.size(); i++) {
-            if(this.logics.get(i).getName().equals(currentLogic.getName())) {
-                if(i + 1 >= this.logics.size())
+    public ILogic getNextLogic(ILogic currentLogic){
+        Iterator<ILogic> it = this.logics.iterator();
+        while(it.hasNext()){
+            ILogic logic = it.next();
+            if(logic == currentLogic){
+                if(it.hasNext()){
+                    return it.next();
+                }else{
                     return this.logics.get(0);
-                return this.logics.get(i + 1);
+                }
             }
         }
         return this.logics.get(0);
     }
-
 }

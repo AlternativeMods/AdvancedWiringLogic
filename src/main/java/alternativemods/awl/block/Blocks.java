@@ -27,7 +27,8 @@ public class Blocks {
     }
 
     protected static void registerTiles() {
-        GameRegistry.registerTileEntity(TileEntityLogic.class, "tileLogic");
+        //TileEntity names are global. When we are installed with a mod that adds a 'tileLogic' too, it will conflict
+        //That's why i added our mod name before it, so it won't make conflicts
+        GameRegistry.registerTileEntity(TileEntityLogic.class, "advancedWiringLogic.tileLogic");
     }
-
 }

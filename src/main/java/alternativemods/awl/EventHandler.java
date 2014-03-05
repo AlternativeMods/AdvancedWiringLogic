@@ -154,7 +154,7 @@ public class EventHandler {
         GL11.glEnd();
 
         GL11.glEnable(GL11.GL_TEXTURE_2D);
-        rnd.drawString("Text text", 100, 100, 0xFFFFFFFF);
+        rnd.drawString("Text text", 0, 0, 0xFFFFFFFF);
         GL11.glDisable(GL11.GL_BLEND);
 
         GL11.glPopMatrix();
