@@ -154,7 +154,11 @@ public class EventHandler {
         GL11.glEnd();
 
         GL11.glEnable(GL11.GL_TEXTURE_2D);
-        rnd.drawString("Text text", 0, 0, 0xFFFFFFFF);
+        GL11.glScalef(0.01f, 0.01f, 0.01f);
+        GL11.glRotatef(180, 1, 1, 0);
+        GL11.glRotatef(90, 0, 0, 1);
+        GL11.glTranslatef(0, 0, -0.01f); //Translate a little bit forward to prevent z-fighting
+        rnd.drawString("Oh hey!", 40, -90, 0xFFFFFFFF);
         GL11.glDisable(GL11.GL_BLEND);
 
         GL11.glPopMatrix();
@@ -184,7 +188,13 @@ public class EventHandler {
         GL11.glVertex2d(0, 1);
         GL11.glVertex2d(1, 1);
         GL11.glEnd();
+
         GL11.glEnable(GL11.GL_TEXTURE_2D);
+        GL11.glScalef(0.01f, 0.01f, 0.01f);
+        GL11.glRotatef(180, 1, 1, 0);
+        GL11.glRotatef(90, 0, 0, 1);
+        GL11.glTranslatef(0, 0, -0.01f); //Translate a little bit forward to prevent z-fighting
+        rnd.drawString("Oh hey!", 10, -90, 0xFFFFFFFF);
         GL11.glDisable(GL11.GL_BLEND);
 
         GL11.glPopMatrix();
