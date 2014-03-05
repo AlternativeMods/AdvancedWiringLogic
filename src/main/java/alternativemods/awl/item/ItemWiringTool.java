@@ -37,15 +37,16 @@ public class ItemWiringTool extends Item {
 
     @Override
     public boolean onItemUse(ItemStack is, EntityPlayer player, World world, int x, int y, int z, int par7, float par8, float par9, float par10) {
-        if(!world.isRemote)
+        if(!world.isRemote){
             return true;
+        }
 
         if(Main.optionsKey.isPressed()) {
             processWithKey(is, player, world, x, y, z);
             return true;
         }
 
-        if(Main.wireManager.activeLogic == null || Main.wireManager.activeLogic.getName() == "Logic Main") {
+        if(Main.wireManager.activeLogic == null || Main.wireManager.activeLogic.getName().equals("Logic Main")){
             Main.proxy.addClientChat("No logic selected! - Aborting!");
             return true;
         }
@@ -59,10 +60,11 @@ public class ItemWiringTool extends Item {
             Main.proxy.addClientChat("Point has to be a full block! - Aborting!");
             return true;
         }
-        if(Main.wireManager.doingWire)
+        if(Main.wireManager.doingWire){
             Main.wireManager.addPoint(x, y, z);
-        else
+        }else{
             Main.wireManager.startWire(world, x, y, z, world.provider.dimensionId);
+        }
 
         return true;
     }
@@ -71,5 +73,4 @@ public class ItemWiringTool extends Item {
     public boolean canHarvestBlock(Block par1Block, ItemStack itemStack) {
         return false;
     }
-
 }
