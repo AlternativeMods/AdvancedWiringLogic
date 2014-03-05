@@ -10,11 +10,8 @@ import alternativemods.awl.api.logic.LogicMain;
 public class LogicAnd extends LogicMain {
 
     @Override
-    public void work() {}
-
-    @Override
-    public boolean isPowered() {
-        return false;
+    public boolean work(boolean isPowered) {
+        return isPowered;
     }
 
     @Override

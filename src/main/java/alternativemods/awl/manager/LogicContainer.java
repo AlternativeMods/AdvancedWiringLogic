@@ -57,22 +57,4 @@ public class LogicContainer {
         return false;
     }
 
-    public boolean isLogicPowered(LogicMain logic) {
-        return logic.isPowered();
-    }
-
-    public boolean isLogicPowered(Point point, int dimension) {
-        for(LogicMain logic : this.logics)
-            if(logic.positionEquals(point.x, point.y, point.z, dimension))
-                return logic.isPowered();
-        return false;
-    }
-
-    public boolean isLogicPowered(int x, int y, int z, int dimension) {
-        for(LogicMain logic : this.logics)
-            if(logic.positionEquals(x, y, z, dimension))
-                return logic.isPowered();
-        return false;
-    }
-
 }

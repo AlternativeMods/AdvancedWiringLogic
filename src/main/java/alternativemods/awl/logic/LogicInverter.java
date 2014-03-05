@@ -10,11 +10,8 @@ import alternativemods.awl.api.logic.LogicMain;
 public class LogicInverter extends LogicMain {
 
     @Override
-    public void work() {}
-
-    @Override
-    public boolean isPowered() {
-        return !world.isBlockIndirectlyGettingPowered(this.x, this.y, this.z);
+    public boolean work(boolean isPowered) {
+        return !isPowered;
     }
 
     @Override

@@ -18,7 +18,9 @@ public abstract class LogicMain {
     public int z;
     public int dimension;
 
-    public void work() {}
+    public boolean work(boolean isPowered) {
+        return isPowered;
+    }
 
     public void setVars(World world, int x, int y, int z, int dimension) {
         this.world = world;
@@ -42,10 +44,6 @@ public abstract class LogicMain {
 
     public boolean positionEquals(Point point, int dimension) {
         return point.x == this.x && point.y == this.y && point.z == this.z && this.dimension == dimension;
-    }
-
-    public boolean isPowered() {
-        return false;
     }
 
     public String getName() {
