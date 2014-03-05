@@ -4,21 +4,21 @@ import alternativemods.awl.api.logic.LogicMain;
 
 /**
  * Author: Lordmau5
- * Date: 21.02.14
- * Time: 17:19
+ * Date: 05.03.14
+ * Time: 20:24
  */
-public class LogicInverter extends LogicMain {
+public class LogicAnd extends LogicMain {
 
     @Override
     public void work() {}
 
     @Override
     public boolean isPowered() {
-        return !world.isBlockIndirectlyGettingPowered(this.x, this.y, this.z);
+        return false;
     }
 
     @Override
     public String getName() {
-        return "Logic Inverter";
+        return "Logic And";
     }
 }

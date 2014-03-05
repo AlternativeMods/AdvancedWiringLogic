@@ -1,11 +1,15 @@
 package alternativemods.awl.network;
 
-import alternativemods.awl.logic.LogicMain;
-import alternativemods.awl.logic.LogicRedstone;
+import alternativemods.awl.Main;
+import alternativemods.awl.api.logic.LogicMain;
+import alternativemods.awl.block.Blocks;
+import alternativemods.awl.tiles.TileEntityLogic;
 import alternativemods.awl.util.Point;
 import alternativemods.awl.util.Wire;
+import cpw.mods.fml.common.network.ByteBufUtils;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.world.World;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,6 +71,7 @@ public abstract class AWLPacket {
             public LogicMain logic;
 
             public AddLogic() {
+
             }
 
             public AddLogic(LogicMain logic) {
@@ -75,6 +80,7 @@ public abstract class AWLPacket {
 
             @Override
             public void encode(ByteBuf buffer){
+                ByteBufUtils.writeUTF8String(buffer, this.logic.getName());
                 int[] pos = this.logic.getPosition();
                 for(Integer intx : pos)
                     buffer.writeInt(intx);
@@ -82,13 +88,19 @@ public abstract class AWLPacket {
 
             @Override
             public void decode(ByteBuf buffer){
+                String logicName = ByteBufUtils.readUTF8String(buffer);
                 int x = buffer.readInt();
                 int y = buffer.readInt();
                 int z = buffer.readInt();
                 int dimension = buffer.readInt();
 
-                this.logic = new LogicRedstone();
+                World world = MinecraftServer.getServer().worldServerForDimension(dimension);
+                world.setBlock(x, y, z, Blocks.blockLogic);
+
+                this.logic = Main.logicRegister.getLogicFromName(logicName);
                 this.logic.setVars(MinecraftServer.getServer().worldServerForDimension(dimension), x, y, z, dimension);
+
+                world.setTileEntity(x, y, z, new TileEntityLogic(this.logic));
             }
         }
     }

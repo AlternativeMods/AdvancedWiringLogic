@@ -28,41 +28,6 @@ public class WorldTransformer implements IClassTransformer {
             {
                 MethodNode m = methods.next();
 
-                if (m.name.equals("getBlockPowerInput") && m.desc.equals("(III)I")) {
-                    Iterator iter = m.instructions.iterator();
-
-                    while (iter.hasNext()) {
-                        AbstractInsnNode node = (AbstractInsnNode) iter.next();
-                        if(node.getOpcode() == Opcodes.ICONST_0) {
-                            InsnList list = new InsnList();
-
-                            Label l1 = new Label();
-
-                            list.add(new FieldInsnNode(Opcodes.GETSTATIC, "alternativemods/awl/Main", "wiresContainer", "Lalternativemods/awl/manager/WiresContainer;"));
-                            list.add(new JumpInsnNode(Opcodes.IFNULL, new LabelNode(l1)));
-
-                            list.add(new FieldInsnNode(Opcodes.GETSTATIC, "alternativemods/awl/Main", "wiresContainer", "Lalternativemods/awl/manager/WiresContainer;"));
-
-                            list.add(new VarInsnNode(Opcodes.ALOAD, 0));
-                            list.add(new VarInsnNode(Opcodes.ILOAD, 1));
-                            list.add(new VarInsnNode(Opcodes.ILOAD, 2));
-                            list.add(new VarInsnNode(Opcodes.ILOAD, 3));
-
-                            list.add(new VarInsnNode(Opcodes.ALOAD, 0));
-                            list.add(new FieldInsnNode(Opcodes.GETFIELD, "net/minecraft/world/World", "provider", "Lnet/minecraft/world/WorldProvider;"));
-                            list.add(new FieldInsnNode(Opcodes.GETFIELD, "net/minecraft/world/WorldProvider", "dimensionId", "I"));
-                            list.add(new MethodInsnNode(Opcodes.INVOKEVIRTUAL, "alternativemods/awl/manager/WiresContainer", "isBlockPoweredByWire", "(Lnet/minecraft/world/World;IIII)Z"));
-
-                            list.add(new JumpInsnNode(Opcodes.IFEQ, new LabelNode(l1)));
-
-                            list.add(new LdcInsnNode(15));
-                            list.add(new InsnNode(Opcodes.IRETURN));
-                            list.add(new LabelNode(l1));
-                            m.instructions.insertBefore(node, list);
-                            break;
-                        }
-                    }
-                }
                 if(m.name.equals("isBlockIndirectlyGettingPowered") && m.desc.equals("(III)Z")) {
                     Iterator iter = m.instructions.iterator();
 

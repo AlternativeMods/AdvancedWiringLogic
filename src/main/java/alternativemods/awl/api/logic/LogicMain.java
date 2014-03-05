@@ -1,6 +1,5 @@
-package alternativemods.awl.logic;
+package alternativemods.awl.api.logic;
 
-import alternativemods.awl.Main;
 import alternativemods.awl.util.Point;
 import net.minecraft.world.World;
 
@@ -11,17 +10,13 @@ import java.util.Arrays;
  * Date: 20.02.14
  * Time: 15:28
  */
-public abstract class LogicMain implements ILogic {
+public abstract class LogicMain {
 
     protected World world;
     public int x;
     public int y;
     public int z;
     public int dimension;
-
-    public LogicMain() {
-        Main.logicRegister.register(this);
-    }
 
     public void work() {}
 

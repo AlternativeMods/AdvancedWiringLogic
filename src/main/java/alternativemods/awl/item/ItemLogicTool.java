@@ -1,8 +1,9 @@
 package alternativemods.awl.item;
 
 import alternativemods.awl.Main;
-import alternativemods.awl.block.Blocks;
-import alternativemods.awl.tiles.TileEntityLogic;
+import alternativemods.awl.api.logic.LogicMain;
+import alternativemods.awl.network.AWLPacket;
+import alternativemods.awl.network.NetworkHandler;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -31,16 +32,17 @@ public class ItemLogicTool extends Item {
             return true;
         }
 
-        TileEntityLogic logicTile = new TileEntityLogic();
-        logicTile.setLogic(Main.logicManager.getActiveLogic());
-
         ForgeDirection dr = ForgeDirection.getOrientation(side);
         x = x + dr.offsetX;
         y = y + dr.offsetY;
         z = z + dr.offsetZ;
 
-        world.setBlock(x, y, z, Blocks.blockLogic);
-        world.setTileEntity(x, y, z, logicTile);
+        if(!world.isAirBlock(x, y, z))
+            return true;
+
+        LogicMain logic = Main.logicManager.getActiveLogic();
+        logic.setVars(world, x, y, z, world.provider.dimensionId);
+        NetworkHandler.sendPacketToServer(new AWLPacket.Server.AddLogic(logic));
 
         Main.proxy.addClientChat("Added a \"" + Main.logicManager.getActiveLogic().getName() + "\"!");
 

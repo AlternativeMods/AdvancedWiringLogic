@@ -36,11 +36,6 @@ public class ItemWiringTool extends Item {
             return true;
         }
 
-        if(Main.optionsKey.isPressed()) {
-            //processWithKey(is, player, world, x, y, z);
-            return true;
-        }
-
         if(player.isSneaking()) {
             Main.wireManager.endWire();
             return true;

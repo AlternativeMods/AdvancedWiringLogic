@@ -1,6 +1,6 @@
 package alternativemods.awl.manager;
 
-import alternativemods.awl.logic.LogicMain;
+import alternativemods.awl.api.logic.LogicMain;
 import alternativemods.awl.util.Point;
 import net.minecraft.world.World;
 

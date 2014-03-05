@@ -36,7 +36,10 @@ public class Main {
         }
     };
 
-    public static KeyBinding optionsKey = new KeyBinding("Options", Keyboard.KEY_R, "Advanced Wiring Logic");
+    public static KeyBinding keyUp = new KeyBinding("Up", Keyboard.KEY_UP, "Advanced Wiring Logic");
+    public static KeyBinding keyDown = new KeyBinding("Down", Keyboard.KEY_DOWN, "Advanced Wiring Logic");
+    public static KeyBinding keyLeft = new KeyBinding("Left", Keyboard.KEY_LEFT, "Advanced Wiring Logic");
+    public static KeyBinding keyRight = new KeyBinding("Right", Keyboard.KEY_RIGHT, "Advanced Wiring Logic");
 
     public static WiresContainer wiresContainer;
     public static WireManager wireManager;

@@ -1,7 +1,7 @@
 package alternativemods.awl.manager;
 
 import alternativemods.awl.Main;
-import alternativemods.awl.logic.LogicMain;
+import alternativemods.awl.api.logic.LogicMain;
 import alternativemods.awl.util.Point;
 import alternativemods.awl.util.Wire;
 import net.minecraft.server.MinecraftServer;
@@ -116,9 +116,16 @@ public class WiresContainer {
         if(world.isRemote)
             return false;
 
-        Point pt = new Point(x, y, z);
         if(this.wires.isEmpty())
             return false;
+
+        for(Wire wire : this.wires) {
+            if(wire.dimension == dimension) {
+                Point stPoint = wire.points.get(0);
+                if(world.getBlockPowerInput(stPoint.x, stPoint.y, stPoint.z) > 0)
+                    return true;
+            }
+        }
 
         return false;
     }

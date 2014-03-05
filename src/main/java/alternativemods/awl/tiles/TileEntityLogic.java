@@ -1,8 +1,7 @@
 package alternativemods.awl.tiles;
 
 import alternativemods.awl.Main;
-import alternativemods.awl.logic.ILogic;
-import alternativemods.awl.logic.LogicMain;
+import alternativemods.awl.api.logic.LogicMain;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 
@@ -13,9 +12,12 @@ import net.minecraft.tileentity.TileEntity;
  */
 public class TileEntityLogic extends TileEntity {
 
-    protected ILogic logic;
+    protected LogicMain logic;
 
     public TileEntityLogic() {}
+    public TileEntityLogic(LogicMain logic) {
+        this.logic = logic;
+    }
 
     public void setLogic(LogicMain logic) {
         this.logic = logic;
