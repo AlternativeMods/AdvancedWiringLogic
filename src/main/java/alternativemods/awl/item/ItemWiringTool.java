@@ -1,7 +1,6 @@
 package alternativemods.awl.item;
 
 import alternativemods.awl.Main;
-import alternativemods.awl.logic.LogicNotGate;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -18,6 +17,7 @@ public class ItemWiringTool extends Item {
     public ItemWiringTool() {
         this.setUnlocalizedName("awl.itemWiringTool");
         this.setMaxStackSize(1);
+        this.setCreativeTab(Main.tab_AWL);
     }
 
     @Override
@@ -30,11 +30,6 @@ public class ItemWiringTool extends Item {
         return is;
     }
 
-    private void processWithKey(ItemStack is, EntityPlayer player, World world, int x, int y, int z) {
-        Main.wireManager.activeLogic = new LogicNotGate();
-        Main.proxy.addClientChat("Set active logic to \"" + Main.wireManager.activeLogic.getName() + "\".");
-    }
-
     @Override
     public boolean onItemUse(ItemStack is, EntityPlayer player, World world, int x, int y, int z, int par7, float par8, float par9, float par10) {
         if(!world.isRemote){
@@ -42,12 +37,7 @@ public class ItemWiringTool extends Item {
         }
 
         if(Main.optionsKey.isPressed()) {
-            processWithKey(is, player, world, x, y, z);
-            return true;
-        }
-
-        if(Main.wireManager.activeLogic == null || Main.wireManager.activeLogic.getName().equals("Logic Main")){
-            Main.proxy.addClientChat("No logic selected! - Aborting!");
+            //processWithKey(is, player, world, x, y, z);
             return true;
         }
 
@@ -63,7 +53,7 @@ public class ItemWiringTool extends Item {
         if(Main.wireManager.doingWire){
             Main.wireManager.addPoint(x, y, z);
         }else{
-            Main.wireManager.startWire(world, x, y, z, world.provider.dimensionId);
+            Main.wireManager.startWire(x, y, z, world.provider.dimensionId);
         }
 
         return true;

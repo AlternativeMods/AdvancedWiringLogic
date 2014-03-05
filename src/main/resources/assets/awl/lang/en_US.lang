@@ -1,3 +1,7 @@
 itemGroup.AWL=Advanced Wiring Logic
 
+block.awl.blockLogic.name=Block Logic
+
 item.awl.itemWiringTool.name=Wiring Tool
+item.awl.itemLogicTool.name=Logic Tool
+item.awl.itemWiringHelmet.name=Wiring Helmet

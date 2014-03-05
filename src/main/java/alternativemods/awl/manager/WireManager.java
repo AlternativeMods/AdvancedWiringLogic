@@ -1,7 +1,6 @@
 package alternativemods.awl.manager;
 
 import alternativemods.awl.Main;
-import alternativemods.awl.logic.LogicMain;
 import alternativemods.awl.network.AWLPacket;
 import alternativemods.awl.network.NetworkHandler;
 import alternativemods.awl.util.Point;
@@ -22,15 +21,13 @@ public class WireManager {
     public boolean doingWire;
     public int dimension = 0;
     public List<Point> points;
-    public LogicMain activeLogic;
 
     public WireManager() {
         this.doingWire = false;
         this.points = null;
-        this.activeLogic = null;
     }
 
-    public void startWire(World world, int x, int y, int z, int dimension) {
+    public void startWire(int x, int y, int z, int dimension) {
         if(this.doingWire)
             return;
 
@@ -39,8 +36,7 @@ public class WireManager {
         this.doingWire = true;
         this.points = new ArrayList<Point>();
         this.points.add(new Point(x, y, z));
-        Main.proxy.addClientChat("Starting a new wire with logic \"" + activeLogic.getName() + "\"!");
-        this.activeLogic.setVars(world, x, y, z, dimension);
+        Main.proxy.addClientChat("Starting a new wire!");
     }
 
     private boolean pointExists(Point point) {
@@ -85,7 +81,6 @@ public class WireManager {
             return;
         }
 
-        NetworkHandler.sendPacketToServer(new AWLPacket.Server.AddLogic(this.activeLogic));
         NetworkHandler.sendPacketToServer(new AWLPacket.Server.AddWire(new Wire(this.points, this.dimension)));
         Main.proxy.addClientChat("Finished the wire with " + this.points.size() + " points!");
         this.points = null;

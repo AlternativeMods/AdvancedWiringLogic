@@ -1,11 +1,14 @@
 package alternativemods.awl;
 
+import alternativemods.awl.block.Blocks;
 import alternativemods.awl.item.Items;
 import alternativemods.awl.manager.LogicContainer;
+import alternativemods.awl.manager.LogicManager;
 import alternativemods.awl.manager.WireManager;
 import alternativemods.awl.manager.WiresContainer;
 import alternativemods.awl.network.NetworkHandler;
 import alternativemods.awl.proxy.CommonProxy;
+import alternativemods.awl.register.LogicRegister;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.SidedProxy;
@@ -38,6 +41,8 @@ public class Main {
     public static WiresContainer wiresContainer;
     public static WireManager wireManager;
     public static LogicContainer logicContainer;
+    public static LogicRegister logicRegister;
+    public static LogicManager logicManager;
 
     @SidedProxy(modId = "AWL", clientSide = "alternativemods.awl.proxy.ClientProxy", serverSide = "alternativemods.awl.proxy.CommonProxy")
     public static CommonProxy proxy;
@@ -45,8 +50,10 @@ public class Main {
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
         NetworkHandler.registerChannels(event.getSide());
+        logicRegister = new LogicRegister();
 
         Items.initiate();
+        Blocks.initiate();
 
         proxy.init();
 
@@ -57,6 +64,7 @@ public class Main {
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
         wireManager = new WireManager();
+        logicManager = new LogicManager();
     }
 
     @Mod.EventHandler
@@ -64,6 +72,7 @@ public class Main {
         wiresContainer = new WiresContainer();
         wireManager = new WireManager();
         logicContainer = new LogicContainer();
+        logicManager = new LogicManager();
     }
 
 }

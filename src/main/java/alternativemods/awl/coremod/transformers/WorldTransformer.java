@@ -51,7 +51,7 @@ public class WorldTransformer implements IClassTransformer {
                             list.add(new VarInsnNode(Opcodes.ALOAD, 0));
                             list.add(new FieldInsnNode(Opcodes.GETFIELD, "net/minecraft/world/World", "provider", "Lnet/minecraft/world/WorldProvider;"));
                             list.add(new FieldInsnNode(Opcodes.GETFIELD, "net/minecraft/world/WorldProvider", "dimensionId", "I"));
-                            list.add(new MethodInsnNode(Opcodes.INVOKEVIRTUAL, "alternativemods/awl/manager/WiresContainer", "isBlockPoweredByLogic", "(Lnet/minecraft/world/World;IIII)Z"));
+                            list.add(new MethodInsnNode(Opcodes.INVOKEVIRTUAL, "alternativemods/awl/manager/WiresContainer", "isBlockPoweredByWire", "(Lnet/minecraft/world/World;IIII)Z"));
 
                             list.add(new JumpInsnNode(Opcodes.IFEQ, new LabelNode(l1)));
 
@@ -86,7 +86,7 @@ public class WorldTransformer implements IClassTransformer {
                             list.add(new VarInsnNode(Opcodes.ALOAD, 0));
                             list.add(new FieldInsnNode(Opcodes.GETFIELD, "net/minecraft/world/World", "provider", "Lnet/minecraft/world/WorldProvider;"));
                             list.add(new FieldInsnNode(Opcodes.GETFIELD, "net/minecraft/world/WorldProvider", "dimensionId", "I"));
-                            list.add(new MethodInsnNode(Opcodes.INVOKEVIRTUAL, "alternativemods/awl/manager/WiresContainer", "isBlockPoweredByLogic", "(Lnet/minecraft/world/World;IIII)Z"));
+                            list.add(new MethodInsnNode(Opcodes.INVOKEVIRTUAL, "alternativemods/awl/manager/WiresContainer", "isBlockPoweredByWire", "(Lnet/minecraft/world/World;IIII)Z"));
 
                             list.add(new JumpInsnNode(Opcodes.IFEQ, new LabelNode(l1)));
 

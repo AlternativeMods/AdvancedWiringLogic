@@ -1,6 +1,5 @@
 package alternativemods.awl.item;
 
-import alternativemods.awl.Main;
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.item.Item;
 
@@ -13,23 +12,23 @@ public class Items {
 
     public static Item wireTool;
     public static Item wireHelmet;
+    public static Item logicTool;
 
     public static void initiate() {
+        createItems();
+        registerItems();
+    }
+
+    private static void createItems() {
         wireTool = new ItemWiringTool();
         wireHelmet = new ItemWiringHelmet();
-
-        addToCreative();
-        register();
+        logicTool = new ItemLogicTool();
     }
 
-    private static void addToCreative() {
-        wireTool.setCreativeTab(Main.tab_AWL);
-        wireHelmet.setCreativeTab(Main.tab_AWL);
-    }
-
-    private static void register() {
+    private static void registerItems() {
         GameRegistry.registerItem(wireTool, "itemWiringTool");
         GameRegistry.registerItem(wireHelmet, "itemWiringHelmet");
+        GameRegistry.registerItem(logicTool, "itemLogicTool");
     }
 
 }

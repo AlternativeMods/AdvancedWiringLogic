@@ -5,7 +5,14 @@ package alternativemods.awl.logic;
  * Date: 21.02.14
  * Time: 17:19
  */
-public class LogicNotGate extends LogicMain {
+public class LogicInverter extends LogicMain implements ILogic {
+
+    public LogicInverter() {
+        super();
+    }
+
+    @Override
+    public void work() {}
 
     @Override
     public boolean isPowered() {
@@ -14,6 +21,6 @@ public class LogicNotGate extends LogicMain {
 
     @Override
     public String getName() {
-        return "Logic Not Gate";
+        return "Logic Inverter";
     }
 }

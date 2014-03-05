@@ -1,6 +1,7 @@
 package alternativemods.awl.manager;
 
 import alternativemods.awl.Main;
+import alternativemods.awl.logic.LogicMain;
 import alternativemods.awl.util.Point;
 import alternativemods.awl.util.Wire;
 import net.minecraft.server.MinecraftServer;
@@ -95,6 +96,9 @@ public class WiresContainer {
     }
 
     public void notifyWireEnds(World world, Point point) {
+        if(world.isRemote)
+            return;
+
         for(Wire wire : this.wires)
             if(world.provider.dimensionId == wire.dimension && wire.points.get(0).equals(point)) {
                 Point endPt = wire.points.get(wire.points.size() - 1);
@@ -102,26 +106,19 @@ public class WiresContainer {
                 world.notifyBlockOfNeighborChange(endPt.x, endPt.y, endPt.z, world.getBlock(endPt.x, endPt.y, endPt.z));
                 world.markBlockForUpdate(endPt.x, endPt.y, endPt.z);
             }
+
+        for(LogicMain logic : Main.logicContainer.logics)
+            if(logic.positionEquals(point, world.provider.dimensionId))
+                logic.work();
     }
 
-    public boolean isBlockPoweredByLogic(World world, int x, int y, int z, int dimension) {
+    public boolean isBlockPoweredByWire(World world, int x, int y, int z, int dimension) {
         if(world.isRemote)
             return false;
 
         Point pt = new Point(x, y, z);
         if(this.wires.isEmpty())
             return false;
-
-        for(Wire wire : this.wires) {
-            Point wirePt = wire.points.get(wire.points.size() - 1);
-            if(wirePt.equals(pt)) {
-                Point startPoint = wire.points.get(0);
-                if(Main.logicContainer.isLogicAtPos(startPoint, dimension)) {
-                    if(Main.logicContainer.isLogicPowered(startPoint, dimension))
-                        return true;
-                }
-            }
-        }
 
         return false;
     }

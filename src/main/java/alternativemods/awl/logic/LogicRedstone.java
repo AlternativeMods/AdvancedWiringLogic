@@ -5,7 +5,14 @@ package alternativemods.awl.logic;
  * Date: 20.02.14
  * Time: 15:44
  */
-public class LogicRedstone extends LogicMain {
+public class LogicRedstone extends LogicMain implements ILogic {
+
+    public LogicRedstone() {
+        super();
+    }
+
+    @Override
+    public void work() {}
 
     @Override
     public boolean isPowered() {
