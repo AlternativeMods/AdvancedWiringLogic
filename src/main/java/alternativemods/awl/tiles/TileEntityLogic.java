@@ -13,15 +13,33 @@ import net.minecraft.tileentity.TileEntity;
 public class TileEntityLogic extends TileEntity {
 
     protected ILogic logic;
+    boolean needsSetup = true;
 
-    public TileEntityLogic() {}
+    public TileEntityLogic() {
+        this.needsSetup = true;
+    }
     public TileEntityLogic(ILogic logic) {
+        super();
         this.logic = logic;
     }
 
     public ILogic getLogic() { return this.logic; }
     public void setLogic(ILogic logic) {
         this.logic = logic;
+    }
+
+    @Override
+    public void validate() {
+        super.validate();
+    }
+
+    @Override
+    public void updateEntity() {
+        if(this.needsSetup && this.worldObj != null && !this.worldObj.isRemote) {
+            this.needsSetup = false;
+            this.logic.setVars(this.worldObj, this.xCoord, this.yCoord, this.zCoord, this.worldObj.provider.dimensionId);
+            Main.logicContainer.addLogic(this.logic);
+        }
     }
 
     @Override
@@ -36,7 +54,9 @@ public class TileEntityLogic extends TileEntity {
     public void writeToNBT(NBTTagCompound tag) {
         super.writeToNBT(tag);
 
-        tag.setString("Logic", this.logic.getName());
-        this.logic.writeToNBT(tag);
+        if(this.logic != null) {
+            tag.setString("Logic", this.logic.getName());
+            this.logic.writeToNBT(tag);
+        }
     }
 }

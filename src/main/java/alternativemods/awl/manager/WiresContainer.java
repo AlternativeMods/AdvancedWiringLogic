@@ -7,7 +7,6 @@ import alternativemods.awl.util.Wire;
 import com.google.common.collect.Lists;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -117,12 +116,26 @@ public class WiresContainer {
         return false;
     }
 
+    public void updatePoweredState(boolean signal, Wire wire) {
+        wire.setPowered(signal);
+        for(IPoint point : wire.points) {
+            if(point instanceof ILogic) {
+                ILogic logic = (ILogic) point;
+                System.out.println(wire.isPowered());
+                wire.setPowered(logic.work(signal, wire.isPowered()));
+                System.out.println(wire.isPowered());
+            }
+        }
+    }
+
     public void notifyWireEnds(World world, IPoint point) {
         if(world.isRemote)
             return;
 
         for(Wire wire : this.wires)
             if(world.provider.dimensionId == wire.dimension && wire.points.get(0).equals(point)) {
+                updatePoweredState(world.getBlockPowerInput(point.x, point.y, point.z) > 0, wire);
+
                 IPoint endPt = wire.points.get(wire.points.size() - 1);
                 world.notifyBlocksOfNeighborChange(endPt.x, endPt.y, endPt.z, world.getBlock(endPt.x, endPt.y, endPt.z));
                 world.notifyBlockOfNeighborChange(endPt.x, endPt.y, endPt.z, world.getBlock(endPt.x, endPt.y, endPt.z));
@@ -141,27 +154,8 @@ public class WiresContainer {
 
         for(Wire wire : this.wires) {
             if(wire.dimension == dimension) {
-                IPoint endPt = wire.points.get(wire.points.size() - 1);
-                boolean found = false;
-                for(ForgeDirection dr : ForgeDirection.VALID_DIRECTIONS) {
-                    if(endPt.x + dr.offsetX == x && endPt.y + dr.offsetY == y && endPt.z + dr.offsetZ == z)
-                        found = true;
-                }
-                if(endPt.x == x && endPt.y == y && endPt.z == z)
-                    found = true;
-
-                if(!found)
-                    continue;
-
-                IPoint stPoint = wire.points.get(0);
-                signal = world.getBlockPowerInput(stPoint.x, stPoint.y, stPoint.z) > 0;
-                for(int i=1; i<wire.points.size(); i++) {
-                    if(wire.points.get(i) instanceof ILogic) {
-                        ILogic logic = (ILogic) wire.points.get(i);
-                        signal = logic.work(signal);
-                    }
-                }
-                break;
+                if(isWireEndingAt(world, new Point(x, y, z)) && wire.isPowered())
+                    return true;
             }
         }
 

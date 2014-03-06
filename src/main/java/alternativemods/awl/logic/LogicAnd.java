@@ -10,7 +10,7 @@ import alternativemods.awl.api.logic.ILogic;
 public class LogicAnd extends ILogic {
 
     @Override
-    public boolean work(boolean isPowered) {
+    public boolean work(boolean startingSignal, boolean isPowered) {
         return isPowered;
     }
 

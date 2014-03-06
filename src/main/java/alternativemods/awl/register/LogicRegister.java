@@ -3,6 +3,7 @@ package alternativemods.awl.register;
 import alternativemods.awl.api.logic.ILogic;
 import alternativemods.awl.logic.LogicAnd;
 import alternativemods.awl.logic.LogicInverter;
+import alternativemods.awl.logic.LogicLatch;
 import com.google.common.collect.Lists;
 
 import java.util.List;
@@ -19,6 +20,7 @@ public class LogicRegister {
     public LogicRegister() {
         register(new LogicInverter());
         register(new LogicAnd());
+        register(new LogicLatch());
     }
 
     public void register(ILogic logic) {

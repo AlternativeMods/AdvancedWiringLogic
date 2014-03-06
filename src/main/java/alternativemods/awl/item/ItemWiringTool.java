@@ -1,10 +1,12 @@
 package alternativemods.awl.item;
 
 import alternativemods.awl.Main;
+import alternativemods.awl.tiles.TileEntityLogic;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
 /**
@@ -45,8 +47,10 @@ public class ItemWiringTool extends Item {
             Main.proxy.addClientChat("Point has to be a full block! - Aborting!");
             return true;
         }
-        if(Main.wireManager.doingWire){
-            Main.wireManager.addPoint(x, y, z);
+        if(Main.wireManager.doingWire) {
+            TileEntity tmpTile = world.getTileEntity(x, y, z);
+            if(tmpTile == null || !(tmpTile instanceof TileEntityLogic))
+                Main.wireManager.addPoint(x, y, z);
         }else{
             Main.wireManager.startWire(x, y, z, world.provider.dimensionId);
         }

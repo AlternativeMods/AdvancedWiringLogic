@@ -60,22 +60,20 @@ public class WireManager {
     }
 
     public void addPoint(int x, int y, int z) {
-        if(Main.logicContainer.isLogicAtPos(x, y, z, dimension)) {  // Add Logic instead of Point
-            ILogic logic = Main.logicContainer.getLogicFromPosition(x, y, z, dimension);
-            if(logic == null)
-                return;
+        IPoint point = new Point(x, y, z);
+        if(pointExists(point))
+            return;
 
-            this.points.add(logic);
-            Main.proxy.addClientChat("Added a \"" + logic.getName() + "\"! - Got " + this.points.size() + " points now!");
-        }
-        else {
-            IPoint point = new Point(x, y, z);
-            if(pointExists(point))
-                return;
+        this.points.add(point);
+        Main.proxy.addClientChat("Added point to wire! - Got " + this.points.size() + " points now!");
+    }
 
-            this.points.add(point);
-            Main.proxy.addClientChat("Added point to wire! - Got " + this.points.size() + " points now!");
-        }
+    public void addLogic(ILogic logic) {
+        if(!this.doingWire)
+            return;
+
+        this.points.add(logic);
+        Main.proxy.addClientChat("Added a \"" + logic.getName() + "\"! - Got " + this.points.size() + " points now!");
     }
 
     public void endWire() {

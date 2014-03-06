@@ -44,7 +44,7 @@ public class WiringHelmetRender {
         Block block = player.worldObj.getBlock(mc.objectMouseOver.blockX, mc.objectMouseOver.blockY, mc.objectMouseOver.blockZ);
         if(block == Blocks.blockLogic) {
             TileEntityLogic logic = (TileEntityLogic) player.worldObj.getTileEntity(mc.objectMouseOver.blockX, mc.objectMouseOver.blockY, mc.objectMouseOver.blockZ);
-            if(logic == null)
+            if(logic == null || logic.getLogic() == null || logic.getLogic().getName() == null)
                 return "Logic";
             return logic.getLogic().getName();
         }

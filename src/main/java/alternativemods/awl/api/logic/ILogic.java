@@ -24,7 +24,7 @@ public abstract class ILogic extends IPoint {
         this.dimension = dimension;
     }
 
-    public boolean work(boolean isPowered) {
+    public boolean work(boolean startingSignal, boolean isPowered) {
         return isPowered;
     }
 

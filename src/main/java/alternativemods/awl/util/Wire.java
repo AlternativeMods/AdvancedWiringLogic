@@ -14,7 +14,6 @@ public class Wire {
 
     public int dimension;
     public List<IPoint> points;
-
     protected boolean isPowered;
 
     public Wire(IPoint point, int dimension) {
