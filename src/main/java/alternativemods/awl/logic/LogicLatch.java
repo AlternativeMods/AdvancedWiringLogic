@@ -1,7 +1,6 @@
 package alternativemods.awl.logic;
 
 import alternativemods.awl.api.logic.ILogic;
-import cpw.mods.fml.common.FMLCommonHandler;
 import net.minecraft.nbt.NBTTagCompound;
 
 /**
@@ -15,12 +14,8 @@ public class LogicLatch extends ILogic {
 
     @Override
     public boolean work(boolean startingSignal, boolean isPowered) {
-        System.out.println("Before: " + this.isPowered);
         if(startingSignal)
             this.isPowered = !this.isPowered;
-        System.out.println("After: " + this.isPowered);
-        System.out.println(FMLCommonHandler.instance().getEffectiveSide().toString());
-        System.out.println();
         return this.isPowered;
     }
 

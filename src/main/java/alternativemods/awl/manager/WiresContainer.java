@@ -121,9 +121,7 @@ public class WiresContainer {
         for(IPoint point : wire.points) {
             if(point instanceof ILogic) {
                 ILogic logic = (ILogic) point;
-                System.out.println(wire.isPowered());
                 wire.setPowered(logic.work(signal, wire.isPowered()));
-                System.out.println(wire.isPowered());
             }
         }
     }
