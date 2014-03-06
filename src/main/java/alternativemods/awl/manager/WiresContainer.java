@@ -7,6 +7,7 @@ import alternativemods.awl.util.Wire;
 import com.google.common.collect.Lists;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -148,16 +149,17 @@ public class WiresContainer {
         if(this.wires.isEmpty())
             return false;
 
-        boolean signal = false;
-
         for(Wire wire : this.wires) {
             if(wire.dimension == dimension) {
                 if(isWireEndingAt(world, new Point(x, y, z)) && wire.isPowered())
                     return true;
+                for(ForgeDirection dr : ForgeDirection.VALID_DIRECTIONS)
+                    if(isWireEndingAt(world, new Point(x + dr.offsetX, y + dr.offsetY, z + dr.offsetZ)) && wire.isPowered())
+                        return true;
             }
         }
 
-        return signal;
+        return false;
     }
 
 }
