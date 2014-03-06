@@ -29,6 +29,7 @@ public class TileEntityLogic extends TileEntity {
         super.readFromNBT(tag);
 
         this.logic = Main.logicRegister.getLogicFromName(tag.getString("Logic"));
+        this.logic.readFromNBT(tag);
     }
 
     @Override
@@ -36,5 +37,6 @@ public class TileEntityLogic extends TileEntity {
         super.writeToNBT(tag);
 
         tag.setString("Logic", this.logic.getName());
+        this.logic.writeToNBT(tag);
     }
 }

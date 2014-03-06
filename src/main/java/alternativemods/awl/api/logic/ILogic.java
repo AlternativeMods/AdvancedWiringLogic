@@ -1,6 +1,7 @@
 package alternativemods.awl.api.logic;
 
 import alternativemods.awl.api.util.IPoint;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
 import java.util.Arrays;
@@ -39,8 +40,14 @@ public abstract class ILogic extends IPoint {
         return x == this.x && y == this.y && z == this.z && this.dimension == dimension;
     }
 
-    public String getName() {
-        return "Logic Main";
+    public abstract String getName();
+
+    public void readFromNBT(NBTTagCompound tag) {
+
+    }
+
+    public void writeToNBT(NBTTagCompound tag) {
+
     }
 
     @Override
