@@ -13,7 +13,7 @@ import io.netty.channel.SimpleChannelInboundHandler;
 public class AddLogic extends SimpleChannelInboundHandler<AWLPacket.Server.AddLogic> {
 
     @Override
-    protected void channelRead0(ChannelHandlerContext ctx, AWLPacket.Server.AddLogic msg) throws Exception{
+    protected void channelRead0(ChannelHandlerContext ctx, AWLPacket.Server.AddLogic msg) throws Exception {
         Main.logicContainer.addLogic(msg.logic);
     }
 

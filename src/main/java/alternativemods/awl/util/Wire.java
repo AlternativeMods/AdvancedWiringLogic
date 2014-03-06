@@ -1,5 +1,7 @@
 package alternativemods.awl.util;
 
+import alternativemods.awl.api.util.IPoint;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,18 +13,18 @@ import java.util.List;
 public class Wire {
 
     public int dimension;
-    public List<Point> points;
+    public List<IPoint> points;
 
     protected boolean isPowered;
 
-    public Wire(Point point, int dimension) {
-        this.points = new ArrayList<Point>();
+    public Wire(IPoint point, int dimension) {
+        this.points = new ArrayList<IPoint>();
         this.points.add(point);
         this.dimension = dimension;
         this.isPowered = false;
     }
 
-    public Wire(List<Point> points, int dimension) {
+    public Wire(List<IPoint> points, int dimension) {
         this.points = points;
         this.dimension = dimension;
         this.isPowered = false;

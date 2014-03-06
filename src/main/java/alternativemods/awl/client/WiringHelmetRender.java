@@ -1,8 +1,11 @@
 package alternativemods.awl.client;
 
 import alternativemods.awl.Main;
-import alternativemods.awl.util.Point;
+import alternativemods.awl.api.util.IPoint;
+import alternativemods.awl.block.Blocks;
+import alternativemods.awl.tiles.TileEntityLogic;
 import alternativemods.awl.util.Wire;
+import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.entity.player.EntityPlayer;
@@ -20,7 +23,7 @@ public class WiringHelmetRender {
     private static Minecraft mc = Minecraft.getMinecraft();
     private static String lastPressed = "None";
 
-    private static float calcDistance(float x, float y, float z, Point point) {
+    private static float calcDistance(float x, float y, float z, IPoint point) {
         float dist = 0;
 
         dist += x > point.x ? x - point.x : point.x - x;
@@ -38,10 +41,16 @@ public class WiringHelmetRender {
         if(mc.objectMouseOver == null || player.worldObj.isAirBlock(mc.objectMouseOver.blockX, mc.objectMouseOver.blockY, mc.objectMouseOver.blockZ))
             return "Not looking at a block.";
 
-        Item item = player.worldObj.getBlock(mc.objectMouseOver.blockX, mc.objectMouseOver.blockY, mc.objectMouseOver.blockZ).getItem(player.worldObj, mc.objectMouseOver.blockX, mc.objectMouseOver.blockY, mc.objectMouseOver.blockZ);
+        Block block = player.worldObj.getBlock(mc.objectMouseOver.blockX, mc.objectMouseOver.blockY, mc.objectMouseOver.blockZ);
+        if(block == Blocks.blockLogic) {
+            TileEntityLogic logic = (TileEntityLogic) player.worldObj.getTileEntity(mc.objectMouseOver.blockX, mc.objectMouseOver.blockY, mc.objectMouseOver.blockZ);
+            if(logic == null)
+                return "Logic";
+            return logic.getLogic().getName();
+        }
+        Item item = block.getItem(player.worldObj, mc.objectMouseOver.blockX, mc.objectMouseOver.blockY, mc.objectMouseOver.blockZ);
         ItemStack is = new ItemStack(item, 1, player.worldObj.getBlockMetadata(mc.objectMouseOver.blockX, mc.objectMouseOver.blockY, mc.objectMouseOver.blockZ));
         return is.getDisplayName();
-        //return player.worldObj.isAirBlock(mc.objectMouseOver.blockX, mc.objectMouseOver.blockY, mc.objectMouseOver.blockZ) ? "Not looking at a block." : player.worldObj.getBlock(mc.objectMouseOver.blockX, mc.objectMouseOver.blockY, mc.objectMouseOver.blockZ).getItem(player.worldObj, mc.objectMouseOver.blockX, mc.objectMouseOver.blockY, mc.objectMouseOver.blockZ).getUnlocalizedName();
     }
 
     public static void render(EntityPlayer playertmp, float partialTicks) {
@@ -76,8 +85,8 @@ public class WiringHelmetRender {
                     if(!wire.points.isEmpty()) {
                         int i2 = 0;
                         while(i2 < wire.points.size() - 1) {
-                            Point tmp1 = wire.points.get(i2);
-                            Point tmp2 = wire.points.get(i2 + 1);
+                            IPoint tmp1 = wire.points.get(i2);
+                            IPoint tmp2 = wire.points.get(i2 + 1);
 
                             if(calcDistance(px, py, pz, tmp1) < 20) {
                                 GL11.glVertex3f((float)(tmp1.x - px + 0.5), (float) (tmp1.y - py + 0.5), (float)(tmp1.z - pz + 0.5));
@@ -109,8 +118,8 @@ public class WiringHelmetRender {
 
             int i = 0;
             while(i < Main.wireManager.points.size() - 1) {
-                Point tmp1 = Main.wireManager.points.get(i);
-                Point tmp2 = Main.wireManager.points.get(i + 1);
+                IPoint tmp1 = Main.wireManager.points.get(i);
+                IPoint tmp2 = Main.wireManager.points.get(i + 1);
 
                 if(calcDistance(px, py, pz, tmp1) < 20) {
                     GL11.glVertex3f((float)(tmp1.x - px + 0.5), (float) (tmp1.y - py + 0.5), (float)(tmp1.z - pz + 0.5));

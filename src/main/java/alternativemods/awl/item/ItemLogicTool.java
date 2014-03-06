@@ -1,7 +1,7 @@
 package alternativemods.awl.item;
 
 import alternativemods.awl.Main;
-import alternativemods.awl.api.logic.LogicMain;
+import alternativemods.awl.api.logic.ILogic;
 import alternativemods.awl.network.AWLPacket;
 import alternativemods.awl.network.NetworkHandler;
 import net.minecraft.entity.player.EntityPlayer;
@@ -40,7 +40,11 @@ public class ItemLogicTool extends Item {
         if(!world.isAirBlock(x, y, z))
             return true;
 
-        LogicMain logic = Main.logicManager.getActiveLogic();
+        ILogic logic = Main.logicManager.getActiveLogic();
+        if(logic == null) {
+            Main.proxy.addClientChat("Select a logic first!");
+            return true;
+        }
         logic.setVars(world, x, y, z, world.provider.dimensionId);
         NetworkHandler.sendPacketToServer(new AWLPacket.Server.AddLogic(logic));
 

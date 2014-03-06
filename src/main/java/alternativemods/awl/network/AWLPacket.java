@@ -1,7 +1,8 @@
 package alternativemods.awl.network;
 
 import alternativemods.awl.Main;
-import alternativemods.awl.api.logic.LogicMain;
+import alternativemods.awl.api.logic.ILogic;
+import alternativemods.awl.api.util.IPoint;
 import alternativemods.awl.block.Blocks;
 import alternativemods.awl.tiles.TileEntityLogic;
 import alternativemods.awl.util.Point;
@@ -32,8 +33,7 @@ public abstract class AWLPacket {
         public static class AddWire extends AWLPacket {
             public Wire wire;
 
-            public AddWire() {
-            }
+            public AddWire() {}
 
             public AddWire(Wire wire) {
                 this.wire = wire;
@@ -44,10 +44,17 @@ public abstract class AWLPacket {
                 buffer.writeInt(this.wire.dimension);
                 buffer.writeInt(this.wire.points.size());
 
-                for(Point point : this.wire.points) {
+                for(IPoint point : this.wire.points) {
+                    if(Main.logicContainer.isLogicAtPos(point.x, point.y, point.z, this.wire.dimension))
+                        buffer.writeBoolean(true);
+                    else
+                        buffer.writeBoolean(false);
                     buffer.writeInt(point.x);
                     buffer.writeInt(point.y);
                     buffer.writeInt(point.z);
+                    if(Main.logicContainer.isLogicAtPos(point.x, point.y, point.z, this.wire.dimension)) {
+                        ByteBufUtils.writeUTF8String(buffer, Main.logicContainer.getLogicFromPosition(point.x, point.y, point.z, this.wire.dimension).getName());
+                    }
                 }
             }
 
@@ -56,25 +63,30 @@ public abstract class AWLPacket {
                 int dimension = buffer.readInt();
                 int ptLength = buffer.readInt();
 
-                List<Point> points = new ArrayList<Point>();
+                List<IPoint> points = new ArrayList<IPoint>();
                 for(int i=0; i<ptLength; i++) {
+                    boolean isLogic = buffer.readBoolean();
                     int x = buffer.readInt();
                     int y = buffer.readInt();
                     int z = buffer.readInt();
-                    points.add(new Point(x, y, z));
+                    if(isLogic) {
+                        ILogic logic = Main.logicRegister.getLogicFromName(ByteBufUtils.readUTF8String(buffer));
+                        logic.setVars(MinecraftServer.getServer().worldServerForDimension(dimension), x, y, z, dimension);
+                        points.add(logic);
+                    }
+                    else
+                        points.add(new Point(x, y, z));
                 }
                 this.wire = new Wire(points, dimension);
             }
         }
 
         public static class AddLogic extends AWLPacket {
-            public LogicMain logic;
+            public ILogic logic;
 
-            public AddLogic() {
+            public AddLogic() {}
 
-            }
-
-            public AddLogic(LogicMain logic) {
+            public AddLogic(ILogic logic) {
                 this.logic = logic;
             }
 
@@ -96,6 +108,8 @@ public abstract class AWLPacket {
 
                 World world = MinecraftServer.getServer().worldServerForDimension(dimension);
                 world.setBlock(x, y, z, Blocks.blockLogic);
+
+                System.out.println(logicName + " at " + x + ":" + y + ":" + z);
 
                 this.logic = Main.logicRegister.getLogicFromName(logicName);
                 this.logic.setVars(MinecraftServer.getServer().worldServerForDimension(dimension), x, y, z, dimension);

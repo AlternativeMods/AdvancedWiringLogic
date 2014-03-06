@@ -1,7 +1,8 @@
 package alternativemods.awl.manager;
 
-import alternativemods.awl.api.logic.LogicMain;
-import alternativemods.awl.util.Point;
+import alternativemods.awl.Main;
+import alternativemods.awl.api.logic.ILogic;
+import alternativemods.awl.api.util.IPoint;
 import net.minecraft.world.World;
 
 import java.util.ArrayList;
@@ -14,46 +15,47 @@ import java.util.List;
  */
 public class LogicContainer {
 
-    public List<LogicMain> logics;
+    public List<ILogic> logics;
 
     public LogicContainer() {
-        this.logics = new ArrayList<LogicMain>();
+        this.logics = new ArrayList<ILogic>();
     }
 
-    public void addLogic(LogicMain logic) {
-        if(!isLogicAtPos(logic.x, logic.y, logic.z, logic.dimension)){
+    public void addLogic(ILogic logic) {
+        if(!isLogicAtPos(logic.x, logic.y, logic.z, logic.dimension))
             this.logics.add(logic);
-        }
     }
 
-    public void addLogic(LogicMain logic, World world, int x, int y, int z, int dimension) {
-        if(isLogicAtPos(x, y, z, dimension))
-            return;
-        logic.setVars(world, x, y, z, dimension);
-        this.logics.add(logic);
-    }
-
-    public void removeLogic(LogicMain logic) {
+    public void removeLogic(World world, int x, int y, int z, int dimension) {
         for(int i=0; i<this.logics.size(); i++) {
-            LogicMain lg = this.logics.get(i);
-            if(lg.equals(logic)) {
+            ILogic lg = this.logics.get(i);
+            if(lg.positionEquals(x, y, z, dimension)) {
                 this.logics.remove(lg);
+                Main.wiresContainer.removeLogic(world, lg);
                 break;
             }
         }
     }
 
-    public boolean isLogicAtPos(Point point, int dimension) {
-        for(LogicMain logic : this.logics)
+    public ILogic getLogicFromPosition(int x, int y, int z, int dimension) {
+        for(ILogic logic : this.logics)
+            if(logic.positionEquals(x, y, z, dimension))
+                return logic;
+        return null;
+    }
+
+    public boolean isLogicAtPos(IPoint point, int dimension) {
+        for(ILogic logic : this.logics)
             if(logic.positionEquals(point.x, point.y, point.z, dimension))
                 return true;
         return false;
     }
 
     public boolean isLogicAtPos(int x, int y, int z, int dimension) {
-        for(LogicMain logic : this.logics)
+        for(ILogic logic : this.logics) {
             if(logic.positionEquals(x, y, z, dimension))
                 return true;
+        }
         return false;
     }
 
