@@ -54,8 +54,8 @@ public class Main {
 
         proxy.init();
 
-        MinecraftForge.EVENT_BUS.register(new EventHandler());
-        FMLCommonHandler.instance().bus().register(new EventHandler());
+        MinecraftForge.EVENT_BUS.register(EventHandler.instance());
+        FMLCommonHandler.instance().bus().register(EventHandler.instance());
     }
 
     @Mod.EventHandler

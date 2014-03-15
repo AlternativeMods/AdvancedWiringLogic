@@ -18,6 +18,12 @@ import net.minecraftforge.event.world.BlockEvent;
  */
 public class EventHandler {
 
+    private static final EventHandler INSTANCE = new EventHandler();
+
+    public static EventHandler instance(){
+        return INSTANCE;
+    }
+
     @SubscribeEvent
     public void renderWorldLastEvent(RenderWorldLastEvent event) {
         EntityPlayer playertmp = Minecraft.getMinecraft().thePlayer;
