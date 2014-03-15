@@ -1,7 +1,6 @@
 package alternativemods.awl.logic;
 
 import alternativemods.awl.api.logic.ILogic;
-import net.minecraft.nbt.NBTTagCompound;
 
 /**
  * Author: Lordmau5
@@ -10,33 +9,14 @@ import net.minecraft.nbt.NBTTagCompound;
  */
 public class LogicLatch extends ILogic {
 
-    boolean isPowered;
-
     @Override
-    public boolean work(boolean startingSignal, boolean isPowered) {
-        if(startingSignal)
-            this.isPowered = !this.isPowered;
-        return this.isPowered;
+    public void work(boolean powered) {
+        if(powered)
+            setPowered(!this.isPowered());
     }
-
-    public boolean isPowered() { return this.isPowered; }
 
     @Override
     public String getName() {
         return "Logic Latch";
-    }
-
-    @Override
-    public void readFromNBT(NBTTagCompound tag) {
-        this.isPowered = tag.getBoolean("powered");
-
-        super.readFromNBT(tag);
-    }
-
-    @Override
-    public void writeToNBT(NBTTagCompound tag) {
-        tag.setBoolean("powered", this.isPowered);
-
-        super.writeToNBT(tag);
     }
 }

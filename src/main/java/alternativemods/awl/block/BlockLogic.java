@@ -3,7 +3,6 @@ package alternativemods.awl.block;
 import alternativemods.awl.Main;
 import alternativemods.awl.api.logic.ILogic;
 import alternativemods.awl.item.Items;
-import alternativemods.awl.logic.LogicLatch;
 import alternativemods.awl.tiles.TileEntityLogic;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -42,7 +41,11 @@ public class BlockLogic extends Block {
             return true;
 
         if(player.getHeldItem() != null && player.getHeldItem().getItem() == Items.wireTool) {
-            Main.wireManager.addLogic(((TileEntityLogic)world.getTileEntity(x, y, z)).getLogic());
+            if(Main.wireManager.doingWire) {
+                Main.wireManager.addPoint(x, y, z);
+            }else{
+                Main.wireManager.startWire(x, y, z, world.provider.dimensionId);
+            }
             return true;
         }
 
@@ -51,10 +54,7 @@ public class BlockLogic extends Block {
             return true;
 
         ILogic logic = ((TileEntityLogic) tile).getLogic();
-        if(logic == null || !(logic instanceof LogicLatch))
-            return true;
-
-        player.addChatMessage(new ChatComponentText("Is powered: " + ((LogicLatch) logic).isPowered()));
+        player.addChatMessage(new ChatComponentText("isPowered: " + logic.isPowered()));
         return true;
     }
 

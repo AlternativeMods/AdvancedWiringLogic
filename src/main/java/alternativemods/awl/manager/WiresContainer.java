@@ -1,11 +1,14 @@
 package alternativemods.awl.manager;
 
+import alternativemods.awl.Main;
 import alternativemods.awl.api.logic.ILogic;
 import alternativemods.awl.api.util.IPoint;
+import alternativemods.awl.tiles.TileEntityLogic;
 import alternativemods.awl.util.Point;
 import alternativemods.awl.util.Wire;
 import com.google.common.collect.Lists;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -39,8 +42,22 @@ public class WiresContainer {
     }
 
     public void addWire(Wire wire) {
+    	World world = MinecraftServer.getServer().worldServerForDimension(wire.dimension);
+        
+    	for(IPoint point : wire.points)
+        	if(point instanceof ILogic) {
+        		TileEntity tmpTile = world.getTileEntity(point.x, point.y, point.z);
+        		if(tmpTile != null && tmpTile instanceof TileEntityLogic) {
+        			ILogic logic = ((TileEntityLogic)tmpTile).getLogic();
+        			if(logic != null)
+        				if(!logic.setupWith(wire))
+        					return;
+        		}
+        	}
+        
         if(!this.wires.contains(wire))
             this.wires.add(wire);
+        
         updateWirePoints(wire);
     }
 
@@ -98,11 +115,6 @@ public class WiresContainer {
         }
     }
 
-    public void removeWire(Wire wire) {
-        this.wires.remove(wire);
-        updateWirePoints(wire);
-    }
-
     public boolean isWireStartingAt(World world, IPoint point) {
         for(Wire wire : this.wires)
             if(world.provider.dimensionId == wire.dimension && wire.points.get(0).equals(point))
@@ -119,12 +131,10 @@ public class WiresContainer {
 
     public void updatePoweredState(boolean signal, Wire wire) {
         wire.setPowered(signal);
-        for(IPoint point : wire.points) {
-            if(point instanceof ILogic) {
-                ILogic logic = (ILogic) point;
-                wire.setPowered(logic.work(signal, wire.isPowered()));
-            }
-        }
+    }
+
+    public void updatePoweredState(ILogic logic, Wire wire) {
+        wire.setPowered(logic.isPowered());
     }
 
     public void notifyWireEnds(World world, IPoint point) {
@@ -133,9 +143,17 @@ public class WiresContainer {
 
         for(Wire wire : this.wires)
             if(world.provider.dimensionId == wire.dimension && wire.points.get(0).equals(point)) {
-                updatePoweredState(world.getBlockPowerInput(point.x, point.y, point.z) > 0, wire);
+                boolean signal = world.getBlockPowerInput(point.x, point.y, point.z) > 0;
 
                 IPoint endPt = wire.points.get(wire.points.size() - 1);
+                if(Main.logicContainer.isLogicAtPos(endPt, wire.dimension)) {
+                    ILogic logic = Main.logicContainer.getLogicFromPosition(endPt.x, endPt.y, endPt.z, wire.dimension);
+                    logic.work(signal);
+                    updatePoweredState(logic, wire);
+                }
+                else
+                    updatePoweredState(signal, wire);
+
                 world.notifyBlocksOfNeighborChange(endPt.x, endPt.y, endPt.z, world.getBlock(endPt.x, endPt.y, endPt.z));
                 world.notifyBlockOfNeighborChange(endPt.x, endPt.y, endPt.z, world.getBlock(endPt.x, endPt.y, endPt.z));
                 world.markBlockForUpdate(endPt.x, endPt.y, endPt.z);
@@ -143,18 +161,21 @@ public class WiresContainer {
     }
 
     public boolean isBlockPoweredByWire(World world, int x, int y, int z, int dimension) {
-        if(world.isRemote)
+    	if(world.isRemote)
             return false;
 
         if(this.wires.isEmpty())
             return false;
-
+        
         for(Wire wire : this.wires) {
             if(wire.dimension == dimension) {
-                if(isWireEndingAt(world, new Point(x, y, z)) && wire.isPowered())
+                if(!wire.isPowered())
+                    continue;
+
+                if(isWireEndingAt(world, new Point(x, y, z)))
                     return true;
                 for(ForgeDirection dr : ForgeDirection.VALID_DIRECTIONS)
-                    if(isWireEndingAt(world, new Point(x + dr.offsetX, y + dr.offsetY, z + dr.offsetZ)) && wire.isPowered())
+                    if(isWireEndingAt(world, new Point(x + dr.offsetX, y + dr.offsetY, z + dr.offsetZ)))
                         return true;
             }
         }

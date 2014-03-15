@@ -46,7 +46,7 @@ public class LogicContainer {
 
     public boolean isLogicAtPos(IPoint point, int dimension) {
         for(ILogic logic : this.logics)
-            if(logic.positionEquals(point.x, point.y, point.z, dimension))
+            if(logic.equals(point) && logic.dimension == dimension)
                 return true;
         return false;
     }

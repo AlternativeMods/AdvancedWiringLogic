@@ -45,16 +45,14 @@ public abstract class AWLPacket {
                 buffer.writeInt(this.wire.points.size());
 
                 for(IPoint point : this.wire.points) {
-                    if(Main.logicContainer.isLogicAtPos(point.x, point.y, point.z, this.wire.dimension))
-                        buffer.writeBoolean(true);
-                    else
-                        buffer.writeBoolean(false);
+                    boolean logicAtPos = Main.logicContainer.isLogicAtPos(point.x, point.y, point.z, this.wire.dimension);
+
+                    buffer.writeBoolean(logicAtPos);
                     buffer.writeInt(point.x);
                     buffer.writeInt(point.y);
                     buffer.writeInt(point.z);
-                    if(Main.logicContainer.isLogicAtPos(point.x, point.y, point.z, this.wire.dimension)) {
+                    if(logicAtPos)
                         ByteBufUtils.writeUTF8String(buffer, Main.logicContainer.getLogicFromPosition(point.x, point.y, point.z, this.wire.dimension).getName());
-                    }
                 }
             }
 

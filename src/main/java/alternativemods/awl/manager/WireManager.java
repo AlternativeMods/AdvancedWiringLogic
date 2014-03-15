@@ -35,14 +35,13 @@ public class WireManager {
 
         this.dimension = dimension;
 
-        if(Main.logicContainer.isLogicAtPos(x, y, z, dimension)) {
-            Main.proxy.addClientChat("The starting point cannot be a logic!");
-            return;
-        }
-
         this.doingWire = true;
         this.points = new ArrayList<IPoint>();
-        this.points.add(new Point(x, y, z));
+
+        if(Main.logicContainer.isLogicAtPos(x, y, z, dimension))
+            this.points.add(Main.logicContainer.getLogicFromPosition(x, y, z, dimension));
+        else
+            this.points.add(new Point(x, y, z));
         Main.proxy.addClientChat("Starting a new wire!");
     }
 
@@ -71,6 +70,12 @@ public class WireManager {
     public void addLogic(ILogic logic) {
         if(!this.doingWire)
             return;
+        
+        if(!logic.canAddLogic()) {
+        	Main.proxy.addClientChat("Can't add logic \"" + logic.getName() + "\":");
+        	Main.proxy.addClientChat(logic.getAddError());
+        	return;
+        }
 
         this.points.add(logic);
         Main.proxy.addClientChat("Added a \"" + logic.getName() + "\"! - Got " + this.points.size() + " points now!");
@@ -90,13 +95,8 @@ public class WireManager {
         IPoint stPoint = this.points.get(0);
         IPoint endPoint = this.points.get(this.points.size() - 1);
         if(world.isAirBlock(stPoint.x, stPoint.y, stPoint.z) || !world.getBlock(stPoint.x, stPoint.y, stPoint.z).isOpaqueCube() ||
-           world.isAirBlock(endPoint.x, endPoint.y, endPoint.z) || !world.getBlock(endPoint.x, endPoint.y, endPoint.z).isOpaqueCube()     ) {
+           world.isAirBlock(endPoint.x, endPoint.y, endPoint.z) || !world.getBlock(endPoint.x, endPoint.y, endPoint.z).isOpaqueCube()) {
             Main.proxy.addClientChat("Start or end point is corrupted - Aborting wire-creation!");
-            this.points = null;
-            return;
-        }
-        if(Main.logicContainer.isLogicAtPos(endPoint.x, endPoint.y, endPoint.z, dimension)) {
-            Main.proxy.addClientChat("The end point can't be a logic!");
             this.points = null;
             return;
         }

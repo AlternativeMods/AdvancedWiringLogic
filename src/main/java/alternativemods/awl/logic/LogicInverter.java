@@ -10,8 +10,8 @@ import alternativemods.awl.api.logic.ILogic;
 public class LogicInverter extends ILogic {
 
     @Override
-    public boolean work(boolean startingSignal, boolean isPowered) {
-        return !isPowered;
+    public void work(boolean powered) {
+        setPowered(!powered);
     }
 
     @Override

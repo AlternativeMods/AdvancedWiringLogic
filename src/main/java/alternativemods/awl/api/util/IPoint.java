@@ -20,10 +20,16 @@ public abstract class IPoint {
     }
 
     public boolean equals(IPoint pt) {
-        if(pt.x == this.x && pt.y == this.y && pt.z == this.z)
-            return true;
+        return pt.x == this.x && pt.y == this.y && pt.z == this.z;
+    }
 
-        return false;
+    @Override
+    public String toString(){
+        return this.getClass().getSimpleName() + "{" +
+                ", x=" + x +
+                ", y=" + y +
+                ", z=" + z +
+                '}';
     }
 
 }

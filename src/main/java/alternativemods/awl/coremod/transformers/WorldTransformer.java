@@ -113,65 +113,6 @@ public class WorldTransformer implements IClassTransformer {
             classNode.accept(cw);
             return cw.toByteArray();
         }
-        if(name.equals("net.minecraft.block.Block")) {
-            ClassNode classNode = new ClassNode();
-            ClassReader classReader = new ClassReader(basicClass);
-            classReader.accept(classNode, 0);
-
-            Iterator<MethodNode> methods = classNode.methods.iterator();
-            while(methods.hasNext()) {
-                MethodNode m = methods.next();
-
-                if (m.name.equals("onNeighborBlockChange") && m.desc.equals("(Lnet/minecraft/world/World;IIILnet/minecraft/block/Block;)V")) {
-                    Iterator iter = m.instructions.iterator();
-
-                    while (iter.hasNext()) {
-                        AbstractInsnNode node = (AbstractInsnNode) iter.next();
-                        if(node.getOpcode() == Opcodes.RETURN) {
-                            InsnList list = new InsnList();
-
-                            Label l1 = new Label();
-
-                            list.add(new FieldInsnNode(Opcodes.GETSTATIC, "alternativemods/awl/Main", "wiresContainer", "Lalternativemods/awl/manager/WiresContainer;"));
-                            list.add(new JumpInsnNode(Opcodes.IFNULL, new LabelNode(l1)));
-
-                            list.add(new FieldInsnNode(Opcodes.GETSTATIC, "alternativemods/awl/Main", "wiresContainer", "Lalternativemods/awl/manager/WiresContainer;"));
-                            list.add(new VarInsnNode(Opcodes.ALOAD, 1));
-                            list.add(new TypeInsnNode(Opcodes.NEW, "alternativemods/awl/util/Point"));
-                            list.add(new InsnNode(Opcodes.DUP));
-
-                            list.add(new VarInsnNode(Opcodes.ILOAD, 2));
-                            list.add(new VarInsnNode(Opcodes.ILOAD, 3));
-                            list.add(new VarInsnNode(Opcodes.ILOAD, 4));
-                            list.add(new MethodInsnNode(Opcodes.INVOKESPECIAL, "alternativemods/awl/util/Point", "<init>", "(III)V"));
-                            list.add(new MethodInsnNode(Opcodes.INVOKEVIRTUAL, "alternativemods/awl/manager/WiresContainer", "isWireStartingAt", "(Lnet/minecraft/world/World;Lalternativemods/awl/api/util/IPoint;)Z"));
-
-                            list.add(new JumpInsnNode(Opcodes.IFEQ, new LabelNode(l1)));
-
-                            list.add(new FieldInsnNode(Opcodes.GETSTATIC, "alternativemods/awl/Main", "wiresContainer", "Lalternativemods/awl/manager/WiresContainer;"));
-                            list.add(new VarInsnNode(Opcodes.ALOAD, 1));
-                            list.add(new TypeInsnNode(Opcodes.NEW, "alternativemods/awl/util/Point"));
-                            list.add(new InsnNode(Opcodes.DUP));
-                            list.add(new VarInsnNode(Opcodes.ILOAD, 2));
-                            list.add(new VarInsnNode(Opcodes.ILOAD, 3));
-                            list.add(new VarInsnNode(Opcodes.ILOAD, 4));
-                            list.add(new MethodInsnNode(Opcodes.INVOKESPECIAL, "alternativemods/awl/util/Point", "<init>", "(III)V"));
-                            list.add(new MethodInsnNode(Opcodes.INVOKEVIRTUAL, "alternativemods/awl/manager/WiresContainer", "notifyWireEnds", "(Lnet/minecraft/world/World;Lalternativemods/awl/api/util/IPoint;)V"));
-
-                            list.add(new LabelNode(l1));
-                            m.instructions.insertBefore(node, list);
-                            break;
-                        }
-                    }
-                }
-            }
-
-            System.out.println("Patched " + name + "!");
-
-            ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES);
-            classNode.accept(cw);
-            return cw.toByteArray();
-        }
 
         return basicClass;
     }

@@ -71,7 +71,7 @@ public class WiringHelmetRender {
             GL11.glPushMatrix();
 
             GL11.glDisable(GL11.GL_TEXTURE_2D);
-            GL11.glColor4f(0, 1, 0, 1);
+            GL11.glColor4f(1, 1, 0, 1);
             GL11.glEnable(GL11.GL_BLEND);
             GL11.glLineWidth(2);
 
