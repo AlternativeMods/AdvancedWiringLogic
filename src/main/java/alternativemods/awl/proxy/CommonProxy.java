@@ -8,10 +8,8 @@ package alternativemods.awl.proxy;
 public class CommonProxy {
 
     public void addClientChat(String text) {}
-    public void registerKeyBindings() {}
 
-    public void init() {
-        registerKeyBindings();
+    public void init(){
+
     }
-
 }

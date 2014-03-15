@@ -1,6 +1,8 @@
 package alternativemods.awl.proxy;
 
+import alternativemods.awl.client.ClientEventHandler;
 import cpw.mods.fml.client.registry.ClientRegistry;
+import cpw.mods.fml.common.FMLCommonHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.util.ChatComponentText;
@@ -25,12 +27,14 @@ public class ClientProxy extends CommonProxy {
     }
 
     @Override
-    public void registerKeyBindings() {
-        super.registerKeyBindings();
+    public void init() {
+        super.init();
 
         ClientRegistry.registerKeyBinding(keyUp);
         ClientRegistry.registerKeyBinding(keyDown);
         ClientRegistry.registerKeyBinding(keyLeft);
         ClientRegistry.registerKeyBinding(keyRight);
+
+        FMLCommonHandler.instance().bus().register(new ClientEventHandler());
     }
 }
