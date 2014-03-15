@@ -1,5 +1,6 @@
 package alternativemods.awl.coremod.transformers;
 
+import alternativemods.awl.coremod.AWLCoreMod;
 import net.minecraft.launchwrapper.IClassTransformer;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
@@ -103,10 +104,9 @@ public class WorldTransformer implements IClassTransformer {
                 }
             }
 
-            System.out.println("Patched " + name + "!");
-
             ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES);
             classNode.accept(cw);
+            AWLCoreMod.logger.debug("Successfully patched class {}", name);
             return cw.toByteArray();
         }
 

@@ -19,6 +19,8 @@ import cpw.mods.fml.common.event.FMLServerStoppingEvent;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraftforge.common.MinecraftForge;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Author: Lordmau5
@@ -40,6 +42,8 @@ public class Main {
     public static LogicContainer logicContainer;
     public static LogicRegister logicRegister;
     public static LogicManager logicManager;
+
+    public static final Logger logger = LogManager.getLogger("AWL");
 
     @SidedProxy(modId = "AWL", clientSide = "alternativemods.awl.proxy.ClientProxy", serverSide = "alternativemods.awl.proxy.CommonProxy")
     public static CommonProxy proxy;

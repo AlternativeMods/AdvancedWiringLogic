@@ -107,7 +107,7 @@ public abstract class AWLPacket {
                 World world = MinecraftServer.getServer().worldServerForDimension(dimension);
                 world.setBlock(x, y, z, Blocks.blockLogic);
 
-                System.out.println(logicName + " at " + x + ":" + y + ":" + z);
+                Main.logger.debug("Found {} at {}, {}, {}", logicName, x, y, z);
 
                 this.logic = Main.logicRegister.getLogicFromName(logicName);
                 this.logic.setVars(MinecraftServer.getServer().worldServerForDimension(dimension), x, y, z, dimension);

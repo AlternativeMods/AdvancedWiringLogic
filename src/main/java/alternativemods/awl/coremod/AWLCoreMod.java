@@ -1,6 +1,8 @@
 package alternativemods.awl.coremod;
 
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Map;
 
@@ -16,6 +18,7 @@ import java.util.Map;
 public class AWLCoreMod implements IFMLLoadingPlugin {
 
     public static boolean obfuscated;
+    public static final Logger logger = LogManager.getLogger("AWL");
 
     @Override
     public String[] getASMTransformerClass() {
