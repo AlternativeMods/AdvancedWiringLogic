@@ -77,7 +77,7 @@ public class WiringHelmetRender {
 
             GL11.glEnable(GL11.GL_LINE_SMOOTH);
 
-            GL11.glBegin(1);
+            GL11.glBegin(GL11.GL_LINES);
 
             for (int i = 0; i < Main.wiresContainer.wires.size(); i++) {
                 Wire wire = Main.wiresContainer.wires.get(i);
@@ -114,7 +114,7 @@ public class WiringHelmetRender {
 
             GL11.glEnable(GL11.GL_LINE_SMOOTH);
 
-            GL11.glBegin(1);
+            GL11.glBegin(GL11.GL_LINES);
 
             int i = 0;
             while(i < Main.wireManager.points.size() - 1) {

@@ -17,23 +17,19 @@ import java.util.Iterator;
 public class WorldTransformer implements IClassTransformer {
 
     @Override
-    public byte[] transform(String name, String transformedName, byte[] basicClass) {
-        if(name.equals("net.minecraft.world.World")) {
+    public byte[] transform(String name, String transformedName, byte[] basicClass){
+        if(name.equals("net.minecraft.world.World")){
             ClassNode classNode = new ClassNode();
             ClassReader classReader = new ClassReader(basicClass);
             classReader.accept(classNode, 0);
 
-            Iterator<MethodNode> methods = classNode.methods.iterator();
-            while(methods.hasNext())
-            {
-                MethodNode m = methods.next();
-
-                if(m.name.equals("isBlockIndirectlyGettingPowered") && m.desc.equals("(III)Z")) {
+            for(MethodNode m : classNode.methods){
+                if(m.name.equals("isBlockIndirectlyGettingPowered") && m.desc.equals("(III)Z")){
                     Iterator iter = m.instructions.iterator();
 
-                    while (iter.hasNext()) {
+                    while(iter.hasNext()){
                         AbstractInsnNode node = (AbstractInsnNode) iter.next();
-                        if(node.getOpcode() == Opcodes.ALOAD) {
+                        if(node.getOpcode() == Opcodes.ALOAD){
                             InsnList list = new InsnList();
 
                             Label l1 = new Label();
@@ -63,12 +59,12 @@ public class WorldTransformer implements IClassTransformer {
                         }
                     }
                 }
-                if(m.name.equals("notifyBlocksOfNeighborChange") && m.desc.equals("(IIILnet/minecraft/block/Block;)V")) {
+                if(m.name.equals("notifyBlocksOfNeighborChange") && m.desc.equals("(IIILnet/minecraft/block/Block;)V")){
                     Iterator iter = m.instructions.iterator();
 
-                    while (iter.hasNext()) {
+                    while(iter.hasNext()){
                         AbstractInsnNode node = (AbstractInsnNode) iter.next();
-                        if(node.getOpcode() == Opcodes.ALOAD) {
+                        if(node.getOpcode() == Opcodes.ALOAD){
                             InsnList list = new InsnList();
 
                             Label l1 = new Label();

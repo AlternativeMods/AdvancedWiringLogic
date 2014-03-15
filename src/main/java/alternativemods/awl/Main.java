@@ -50,7 +50,7 @@ public class Main {
         logicRegister = new LogicRegister();
 
         Items.initiate();
-        Blocks.initiate();
+        Blocks.init();
 
         proxy.init();
 

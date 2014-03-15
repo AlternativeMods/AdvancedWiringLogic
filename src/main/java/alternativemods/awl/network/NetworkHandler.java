@@ -23,6 +23,7 @@ import java.util.EnumMap;
  * Time: 12:54
  */
 public class NetworkHandler {
+
     private static EnumMap<Side, FMLEmbeddedChannel> channels;
 
     public static void registerChannels(Side side){
