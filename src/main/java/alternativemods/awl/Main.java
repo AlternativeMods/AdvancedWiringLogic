@@ -15,11 +15,10 @@ import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
-import net.minecraft.client.settings.KeyBinding;
+import cpw.mods.fml.common.event.FMLServerStoppingEvent;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraftforge.common.MinecraftForge;
-import org.lwjgl.input.Keyboard;
 
 /**
  * Author: Lordmau5
@@ -35,11 +34,6 @@ public class Main {
             return Items.wireTool;
         }
     };
-
-    public static KeyBinding keyUp = new KeyBinding("Up", Keyboard.KEY_UP, "Advanced Wiring Logic");
-    public static KeyBinding keyDown = new KeyBinding("Down", Keyboard.KEY_DOWN, "Advanced Wiring Logic");
-    public static KeyBinding keyLeft = new KeyBinding("Left", Keyboard.KEY_LEFT, "Advanced Wiring Logic");
-    public static KeyBinding keyRight = new KeyBinding("Right", Keyboard.KEY_RIGHT, "Advanced Wiring Logic");
 
     public static WiresContainer wiresContainer;
     public static WireManager wireManager;
@@ -78,4 +72,11 @@ public class Main {
         logicManager = new LogicManager();
     }
 
+    @Mod.EventHandler
+    public void serverStopping(FMLServerStoppingEvent event){
+        wiresContainer = null;
+        wireManager = null;
+        logicContainer = null;
+        logicManager = null;
+    }
 }
