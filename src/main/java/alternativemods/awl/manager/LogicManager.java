@@ -1,7 +1,7 @@
 package alternativemods.awl.manager;
 
 import alternativemods.awl.Main;
-import alternativemods.awl.api.logic.ILogic;
+import alternativemods.awl.api.logic.AbstractLogic;
 
 /**
  * Author: Lordmau5
@@ -10,13 +10,13 @@ import alternativemods.awl.api.logic.ILogic;
  */
 public class LogicManager {
 
-    private ILogic activeLogic;
+    private AbstractLogic activeLogic;
 
     public LogicManager() {
 
     }
 
-    public ILogic getActiveLogic() {
+    public AbstractLogic getActiveLogic() {
         return this.activeLogic;
     }
 

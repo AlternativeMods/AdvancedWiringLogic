@@ -1,8 +1,8 @@
 package alternativemods.awl.manager;
 
 import alternativemods.awl.Main;
-import alternativemods.awl.api.logic.ILogic;
-import alternativemods.awl.api.util.IPoint;
+import alternativemods.awl.api.logic.AbstractLogic;
+import alternativemods.awl.api.util.AbstractPoint;
 import alternativemods.awl.network.AWLPacket;
 import alternativemods.awl.network.NetworkHandler;
 import alternativemods.awl.util.Point;
@@ -22,7 +22,7 @@ public class WireManager {
 
     public boolean doingWire;
     public int dimension = 0;
-    public List<IPoint> points;
+    public List<AbstractPoint> points;
 
     public WireManager() {
         this.doingWire = false;
@@ -36,7 +36,7 @@ public class WireManager {
         this.dimension = dimension;
 
         this.doingWire = true;
-        this.points = new ArrayList<IPoint>();
+        this.points = new ArrayList<AbstractPoint>();
 
         if(Main.logicContainer.isLogicAtPos(x, y, z, dimension))
             this.points.add(Main.logicContainer.getLogicFromPosition(x, y, z, dimension));
@@ -45,8 +45,8 @@ public class WireManager {
         Main.proxy.addClientChat("Starting a new wire!");
     }
 
-    private boolean pointExists(IPoint point) {
-        for(IPoint pt : this.points)
+    private boolean pointExists(AbstractPoint point) {
+        for(AbstractPoint pt : this.points)
             if(pt.equals(point))
                 return true;
 
@@ -59,7 +59,7 @@ public class WireManager {
     }
 
     public void addPoint(int x, int y, int z) {
-        IPoint point = new Point(x, y, z);
+        AbstractPoint point = new Point(x, y, z);
         if(pointExists(point))
             return;
 
@@ -67,7 +67,7 @@ public class WireManager {
         Main.proxy.addClientChat("Added point to wire! - Got " + this.points.size() + " points now!");
     }
 
-    public void addLogic(ILogic logic) {
+    public void addLogic(AbstractLogic logic) {
         if(!this.doingWire)
             return;
         
@@ -92,8 +92,8 @@ public class WireManager {
             return;
         }
         World world = Minecraft.getMinecraft().theWorld;
-        IPoint stPoint = this.points.get(0);
-        IPoint endPoint = this.points.get(this.points.size() - 1);
+        AbstractPoint stPoint = this.points.get(0);
+        AbstractPoint endPoint = this.points.get(this.points.size() - 1);
         if(world.isAirBlock(stPoint.x, stPoint.y, stPoint.z) || !world.getBlock(stPoint.x, stPoint.y, stPoint.z).isOpaqueCube() ||
            world.isAirBlock(endPoint.x, endPoint.y, endPoint.z) || !world.getBlock(endPoint.x, endPoint.y, endPoint.z).isOpaqueCube()) {
             Main.proxy.addClientChat("Start or end point is corrupted - Aborting wire-creation!");

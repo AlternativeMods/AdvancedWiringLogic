@@ -1,8 +1,8 @@
 package alternativemods.awl.manager;
 
 import alternativemods.awl.Main;
-import alternativemods.awl.api.logic.ILogic;
-import alternativemods.awl.api.util.IPoint;
+import alternativemods.awl.api.logic.AbstractLogic;
+import alternativemods.awl.api.util.AbstractPoint;
 import alternativemods.awl.tiles.TileEntityLogic;
 import alternativemods.awl.util.Point;
 import alternativemods.awl.util.Wire;
@@ -22,16 +22,12 @@ import java.util.List;
  */
 public class WiresContainer {
 
-    public List<Wire> wires;
+    public List<Wire> wires = Lists.newArrayList();
 
-    public WiresContainer() {
-        this.wires = new ArrayList<Wire>();
-    }
-
-    public void updateWirePoints(Wire wire) {
+    public void updateWirePoints(Wire wire){
         World world = MinecraftServer.getServer().worldServerForDimension(wire.dimension);
-        IPoint startPt = wire.points.get(0);
-        IPoint endPt = wire.points.get(wire.points.size() - 1);
+        AbstractPoint startPt = wire.points.get(0);
+        AbstractPoint endPt = wire.points.get(wire.points.size() - 1);
         world.notifyBlocksOfNeighborChange(startPt.x, startPt.y, startPt.z, world.getBlock(startPt.x, startPt.y, startPt.z));
         world.notifyBlocksOfNeighborChange(endPt.x, endPt.y, endPt.z, world.getBlock(endPt.x, endPt.y, endPt.z));
         world.notifyBlockOfNeighborChange(startPt.x, startPt.y, startPt.z, world.getBlock(startPt.x, startPt.y, startPt.z));
@@ -44,19 +40,21 @@ public class WiresContainer {
     public void addWire(Wire wire) {
     	World world = MinecraftServer.getServer().worldServerForDimension(wire.dimension);
         
-    	for(IPoint point : wire.points)
-        	if(point instanceof ILogic) {
-        		TileEntity tmpTile = world.getTileEntity(point.x, point.y, point.z);
-        		if(tmpTile != null && tmpTile instanceof TileEntityLogic) {
-        			ILogic logic = ((TileEntityLogic)tmpTile).getLogic();
-        			if(logic != null)
-        				if(!logic.setupWith(wire))
-        					return;
-        		}
-        	}
+    	for(AbstractPoint point : wire.points){
+            if(point instanceof AbstractLogic) {
+                TileEntity tmpTile = world.getTileEntity(point.x, point.y, point.z);
+                if(tmpTile != null && tmpTile instanceof TileEntityLogic) {
+                    AbstractLogic logic = ((TileEntityLogic)tmpTile).getLogic();
+                    if(logic != null && !logic.setupWith(wire)){
+                        return;
+                    }
+                }
+            }
+        }
         
-        if(!this.wires.contains(wire))
+        if(!this.wires.contains(wire)){
             this.wires.add(wire);
+        }
         
         updateWirePoints(wire);
     }
@@ -74,12 +72,12 @@ public class WiresContainer {
         }
     }
 
-    public void removeLogic(World world, ILogic logic) {
+    public void removeLogic(World world, AbstractLogic logic) {
         List<Wire> wrRemove = Lists.newArrayList();
         for(Wire wire : this.wires) {
-            List<IPoint> toRemove = Lists.newArrayList();
-            for(IPoint point : wire.points) {
-                if(point instanceof ILogic && ((ILogic) point).positionEquals(logic.x, logic.y, logic.z, logic.dimension))
+            List<AbstractPoint> toRemove = Lists.newArrayList();
+            for(AbstractPoint point : wire.points) {
+                if(point instanceof AbstractLogic && ((AbstractLogic) point).positionEquals(logic.x, logic.y, logic.z, logic.dimension))
                     toRemove.add(point);
             }
             wire.points.removeAll(toRemove);
@@ -91,7 +89,7 @@ public class WiresContainer {
         this.wires.removeAll(wrRemove);
     }
 
-    public void shortenWires(World world, IPoint endPoint) {
+    public void shortenWires(World world, AbstractPoint endPoint) {
         List<Wire> toShorten = new ArrayList<Wire>();
         for(Wire wire : this.wires) {
             if(wire.points.get(wire.points.size() - 1).equals(endPoint)) {
@@ -106,23 +104,23 @@ public class WiresContainer {
                 updateWirePoints(oldWire);
             }
             else {
-                IPoint nextPossible = wire.points.get(wire.points.size() - 1);
+                AbstractPoint nextPossible = wire.points.get(wire.points.size() - 1);
                 if(world.isAirBlock(nextPossible.x, nextPossible.y, nextPossible.z) || !world.getBlock(nextPossible.x, nextPossible.y, nextPossible.z).isOpaqueCube()
-                || nextPossible instanceof ILogic) {
+                || nextPossible instanceof AbstractLogic) {
                     shortenWires(world, nextPossible);
                 }
             }
         }
     }
 
-    public boolean isWireStartingAt(World world, IPoint point) {
+    public boolean isWireStartingAt(World world, AbstractPoint point) {
         for(Wire wire : this.wires)
             if(world.provider.dimensionId == wire.dimension && wire.points.get(0).equals(point))
                 return true;
         return false;
     }
 
-    public boolean isWireEndingAt(World world, IPoint point) {
+    public boolean isWireEndingAt(World world, AbstractPoint point) {
         for(Wire wire : this.wires)
             if(world.provider.dimensionId == wire.dimension && wire.points.get(wire.points.size() - 1).equals(point))
                 return true;
@@ -133,11 +131,11 @@ public class WiresContainer {
         wire.setPowered(signal);
     }
 
-    public void updatePoweredState(ILogic logic, Wire wire) {
+    public void updatePoweredState(AbstractLogic logic, Wire wire) {
         wire.setPowered(logic.isPowered());
     }
 
-    public void notifyWireEnds(World world, IPoint point) {
+    public void notifyWireEnds(World world, AbstractPoint point) {
         if(world.isRemote)
             return;
 
@@ -145,9 +143,9 @@ public class WiresContainer {
             if(world.provider.dimensionId == wire.dimension && wire.points.get(0).equals(point)) {
                 boolean signal = world.getBlockPowerInput(point.x, point.y, point.z) > 0;
 
-                IPoint endPt = wire.points.get(wire.points.size() - 1);
+                AbstractPoint endPt = wire.points.get(wire.points.size() - 1);
                 if(Main.logicContainer.isLogicAtPos(endPt, wire.dimension)) {
-                    ILogic logic = Main.logicContainer.getLogicFromPosition(endPt.x, endPt.y, endPt.z, wire.dimension);
+                    AbstractLogic logic = Main.logicContainer.getLogicFromPosition(endPt.x, endPt.y, endPt.z, wire.dimension);
                     logic.work(signal);
                     updatePoweredState(logic, wire);
                 }

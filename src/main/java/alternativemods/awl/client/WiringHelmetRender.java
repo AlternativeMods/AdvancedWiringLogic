@@ -1,7 +1,7 @@
 package alternativemods.awl.client;
 
 import alternativemods.awl.Main;
-import alternativemods.awl.api.util.IPoint;
+import alternativemods.awl.api.util.AbstractPoint;
 import alternativemods.awl.block.Blocks;
 import alternativemods.awl.tiles.TileEntityLogic;
 import alternativemods.awl.util.Wire;
@@ -23,7 +23,7 @@ public class WiringHelmetRender {
     private static Minecraft mc = Minecraft.getMinecraft();
     private static String lastPressed = "None";
 
-    private static float calcDistance(float x, float y, float z, IPoint point) {
+    private static float calcDistance(float x, float y, float z, AbstractPoint point) {
         float dist = 0;
 
         dist += x > point.x ? x - point.x : point.x - x;
@@ -85,8 +85,8 @@ public class WiringHelmetRender {
                     if(!wire.points.isEmpty()) {
                         int i2 = 0;
                         while(i2 < wire.points.size() - 1) {
-                            IPoint tmp1 = wire.points.get(i2);
-                            IPoint tmp2 = wire.points.get(i2 + 1);
+                            AbstractPoint tmp1 = wire.points.get(i2);
+                            AbstractPoint tmp2 = wire.points.get(i2 + 1);
 
                             if(calcDistance(px, py, pz, tmp1) < 20) {
                                 GL11.glVertex3f((float)(tmp1.x - px + 0.5), (float) (tmp1.y - py + 0.5), (float)(tmp1.z - pz + 0.5));
@@ -118,8 +118,8 @@ public class WiringHelmetRender {
 
             int i = 0;
             while(i < Main.wireManager.points.size() - 1) {
-                IPoint tmp1 = Main.wireManager.points.get(i);
-                IPoint tmp2 = Main.wireManager.points.get(i + 1);
+                AbstractPoint tmp1 = Main.wireManager.points.get(i);
+                AbstractPoint tmp2 = Main.wireManager.points.get(i + 1);
 
                 if(calcDistance(px, py, pz, tmp1) < 20) {
                     GL11.glVertex3f((float)(tmp1.x - px + 0.5), (float) (tmp1.y - py + 0.5), (float)(tmp1.z - pz + 0.5));

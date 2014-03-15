@@ -1,6 +1,6 @@
 package alternativemods.awl.logic;
 
-import alternativemods.awl.api.logic.ILogic;
+import alternativemods.awl.api.logic.AbstractLogic;
 import alternativemods.awl.util.Wire;
 import com.google.common.collect.Lists;
 
@@ -11,26 +11,21 @@ import java.util.List;
  * Date: 05.03.14
  * Time: 20:24
  */
-public class LogicAnd extends ILogic {
+public class LogicAnd extends AbstractLogic {
 
-	private List<Wire> inputs;
-	
-	public LogicAnd() {
-		inputs = Lists.newArrayList();
-	}
+	private List<Wire> inputs = Lists.newArrayList();
 	
 	public void addWire(Wire wire) {
-		if(!canAddLogic())
-			return;
-		
-		inputs.add(wire);
+		if(canAddLogic()){
+            inputs.add(wire);
+        }
 	}
 	
 	@Override
 	public boolean setupWith(Wire wire) {
-		if(!canAddLogic())
-			return false;
-		
+		if(!canAddLogic()){
+            return false;
+        }
 		addWire(wire);
 		return true;
 	}

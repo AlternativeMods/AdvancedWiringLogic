@@ -1,8 +1,8 @@
 package alternativemods.awl.network;
 
 import alternativemods.awl.Main;
-import alternativemods.awl.api.logic.ILogic;
-import alternativemods.awl.api.util.IPoint;
+import alternativemods.awl.api.logic.AbstractLogic;
+import alternativemods.awl.api.util.AbstractPoint;
 import alternativemods.awl.block.Blocks;
 import alternativemods.awl.tiles.TileEntityLogic;
 import alternativemods.awl.util.Point;
@@ -44,7 +44,7 @@ public abstract class AWLPacket {
                 buffer.writeInt(this.wire.dimension);
                 buffer.writeInt(this.wire.points.size());
 
-                for(IPoint point : this.wire.points) {
+                for(AbstractPoint point : this.wire.points) {
                     boolean logicAtPos = Main.logicContainer.isLogicAtPos(point.x, point.y, point.z, this.wire.dimension);
 
                     buffer.writeBoolean(logicAtPos);
@@ -61,14 +61,14 @@ public abstract class AWLPacket {
                 int dimension = buffer.readInt();
                 int ptLength = buffer.readInt();
 
-                List<IPoint> points = new ArrayList<IPoint>();
+                List<AbstractPoint> points = new ArrayList<AbstractPoint>();
                 for(int i=0; i<ptLength; i++) {
                     boolean isLogic = buffer.readBoolean();
                     int x = buffer.readInt();
                     int y = buffer.readInt();
                     int z = buffer.readInt();
                     if(isLogic) {
-                        ILogic logic = Main.logicRegister.getLogicFromName(ByteBufUtils.readUTF8String(buffer));
+                        AbstractLogic logic = Main.logicRegister.getLogicFromName(ByteBufUtils.readUTF8String(buffer));
                         logic.setVars(MinecraftServer.getServer().worldServerForDimension(dimension), x, y, z, dimension);
                         points.add(logic);
                     }
@@ -80,11 +80,11 @@ public abstract class AWLPacket {
         }
 
         public static class AddLogic extends AWLPacket {
-            public ILogic logic;
+            public AbstractLogic logic;
 
             public AddLogic() {}
 
-            public AddLogic(ILogic logic) {
+            public AddLogic(AbstractLogic logic) {
                 this.logic = logic;
             }
 

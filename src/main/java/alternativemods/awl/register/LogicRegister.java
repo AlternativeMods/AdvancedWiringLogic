@@ -1,6 +1,6 @@
 package alternativemods.awl.register;
 
-import alternativemods.awl.api.logic.ILogic;
+import alternativemods.awl.api.logic.AbstractLogic;
 import alternativemods.awl.logic.LogicAnd;
 import alternativemods.awl.logic.LogicInverter;
 import alternativemods.awl.logic.LogicLatch;
@@ -15,7 +15,7 @@ import java.util.List;
  */
 public class LogicRegister {
 
-    private List<ILogic> logics = Lists.newArrayList();
+    private List<AbstractLogic> logics = Lists.newArrayList();
 
     public LogicRegister() {
         register(new LogicInverter());
@@ -23,12 +23,12 @@ public class LogicRegister {
         register(new LogicLatch());
     }
 
-    public void register(ILogic logic) {
+    public void register(AbstractLogic logic) {
         this.logics.add(logic);
     }
 
-    public ILogic getLogicFromName(String name) {
-        for(ILogic logic : this.logics){
+    public AbstractLogic getLogicFromName(String name) {
+        for(AbstractLogic logic : this.logics){
             if(logic.getName().equals(name)){
                 try {
                     return logic.getClass().newInstance();
@@ -40,11 +40,11 @@ public class LogicRegister {
         return null;
     }
 
-    public ILogic getNextLogic(ILogic currentLogic){
+    public AbstractLogic getNextLogic(AbstractLogic currentLogic){
         if(currentLogic == null)
             return this.logics.get(0);
         for(int i=0; i<this.logics.size(); i++) {
-            ILogic logic = this.logics.get(i);
+            AbstractLogic logic = this.logics.get(i);
             if(logic.getName().equals(currentLogic.getName())) {
                 if(i + 1 >= this.logics.size())
                     return this.logics.get(0);

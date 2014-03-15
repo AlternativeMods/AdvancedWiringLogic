@@ -1,18 +1,18 @@
 package alternativemods.awl.api.logic;
 
-import alternativemods.awl.api.util.IPoint;
+import alternativemods.awl.api.util.AbstractPoint;
 import alternativemods.awl.util.Wire;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
-
-import java.util.Arrays;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 /**
  * Author: Lordmau5
  * Date: 06.03.14
  * Time: 11:22
  */
-public abstract class ILogic extends IPoint {
+public abstract class AbstractLogic extends AbstractPoint {
+
     protected World world;
     public int dimension;
     protected boolean isPowered;
@@ -26,9 +26,13 @@ public abstract class ILogic extends IPoint {
         this.dimension = dimension;
     }
 
-    public void setPowered(boolean powered) { this.isPowered = powered; }
+    public void setPowered(boolean powered) {
+        this.isPowered = powered;
+    }
 
-    public boolean isPowered() { return this.isPowered; }
+    public boolean isPowered() {
+        return this.isPowered;
+    }
     
     public boolean canAddLogic() {
     	return true;
@@ -66,12 +70,10 @@ public abstract class ILogic extends IPoint {
 
     @Override
     public String toString(){
-        return this.getClass().getSimpleName() + "{" +
-                "world=" + world +
-                ", x=" + x +
-                ", y=" + y +
-                ", z=" + z +
-                ", dimension=" + dimension +
-                '}';
+        return new ToStringBuilder(this)
+                .append("world", world)
+                .append("dimension", dimension)
+                .append("isPowered", isPowered)
+                .toString();
     }
 }
