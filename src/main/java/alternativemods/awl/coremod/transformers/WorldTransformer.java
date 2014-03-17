@@ -82,7 +82,7 @@ public class WorldTransformer implements IClassTransformer {
                             list.add(new VarInsnNode(Opcodes.ILOAD, 2));
                             list.add(new VarInsnNode(Opcodes.ILOAD, 3));
                             list.add(new MethodInsnNode(Opcodes.INVOKESPECIAL, "alternativemods/awl/util/Point", "<init>", "(III)V"));
-                            list.add(new MethodInsnNode(Opcodes.INVOKEVIRTUAL, "alternativemods/awl/manager/WiresContainer", "isWireStartingAt", "(Lnet/minecraft/world/World;Lalternativemods/awl/api/util/IPoint;)Z"));
+                            list.add(new MethodInsnNode(Opcodes.INVOKEVIRTUAL, "alternativemods/awl/manager/WiresContainer", "isWireStartingAt", "(Lnet/minecraft/world/World;Lalternativemods/awl/api/util/AbstractPoint;)Z"));
 
                             list.add(new JumpInsnNode(Opcodes.IFEQ, new LabelNode(l1)));
 
@@ -94,7 +94,7 @@ public class WorldTransformer implements IClassTransformer {
                             list.add(new VarInsnNode(Opcodes.ILOAD, 2));
                             list.add(new VarInsnNode(Opcodes.ILOAD, 3));
                             list.add(new MethodInsnNode(Opcodes.INVOKESPECIAL, "alternativemods/awl/util/Point", "<init>", "(III)V"));
-                            list.add(new MethodInsnNode(Opcodes.INVOKEVIRTUAL, "alternativemods/awl/manager/WiresContainer", "notifyWireEnds", "(Lnet/minecraft/world/World;Lalternativemods/awl/api/util/IPoint;)V"));
+                            list.add(new MethodInsnNode(Opcodes.INVOKEVIRTUAL, "alternativemods/awl/manager/WiresContainer", "notifyWireEnds", "(Lnet/minecraft/world/World;Lalternativemods/awl/api/util/AbstractPoint;)V"));
 
                             list.add(new LabelNode(l1));
                             m.instructions.insertBefore(node, list);
