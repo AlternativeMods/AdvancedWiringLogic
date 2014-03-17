@@ -69,6 +69,14 @@ public abstract class AbstractLogic extends AbstractPoint {
     }
 
     @Override
+    public boolean equals(Object o){
+        if(this == o) return true;
+        if(!(o instanceof AbstractLogic)) return false;
+        AbstractLogic that = (AbstractLogic) o;
+        return x == that.x && y == that.y && z == that.z && this.dimension == that.dimension;
+    }
+
+    @Override
     public String toString(){
         return new ToStringBuilder(this)
                 .append("world", world)

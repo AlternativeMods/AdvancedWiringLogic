@@ -164,13 +164,21 @@ public class WiresContainer {
 
         if(this.wires.isEmpty())
             return false;
-        
+
         for(Wire wire : this.wires) {
             if(wire.dimension == dimension) {
+                AbstractPoint pt = new Point(x, y, z);
+                AbstractPoint endPt = wire.points.get(wire.points.size() - 1);
+                if(endPt instanceof AbstractLogic)
+                    pt = Main.logicContainer.getLogicFromPosition(x, y, z, dimension);
+
+                if(pt == null || !endPt.equals(pt))
+                    continue;
+
                 if(!wire.isPowered())
                     continue;
 
-                if(isWireEndingAt(world, new Point(x, y, z)))
+                if(isWireEndingAt(world, pt))
                     return true;
                 for(ForgeDirection dr : ForgeDirection.VALID_DIRECTIONS)
                     if(isWireEndingAt(world, new Point(x + dr.offsetX, y + dr.offsetY, z + dr.offsetZ)))

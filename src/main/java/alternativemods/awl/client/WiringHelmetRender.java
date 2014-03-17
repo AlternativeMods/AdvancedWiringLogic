@@ -144,7 +144,7 @@ public class WiringHelmetRender {
         float yaw = playertmp.prevRotationYaw + (playertmp.rotationYaw - playertmp.prevRotationYaw) * partialTicks;
         float pitch = playertmp.prevRotationPitch + (playertmp.rotationPitch - playertmp.prevRotationPitch) * partialTicks;
 
-        GL11.glPushMatrix();
+        /*GL11.glPushMatrix();
 
         //Rotate the HUD for our head rotation
         // Left Box
@@ -214,6 +214,6 @@ public class WiringHelmetRender {
         rnd.drawString(textRight, 95 - rnd.getStringWidth(textRight), -90, 0xFFFFFFFF);
         GL11.glDisable(GL11.GL_BLEND);
 
-        GL11.glPopMatrix();
+        GL11.glPopMatrix();*/
     }
 }
