@@ -174,7 +174,6 @@ public class WiresContainer {
     public void updateWireEndsStartingAt(World world, AbstractPoint point) {
         if(world.isRemote)
             return;
-
         for(Wire wire : this.wires) {
             if(world.provider.dimensionId != wire.dimension)
                 continue;
