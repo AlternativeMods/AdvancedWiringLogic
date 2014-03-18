@@ -4,7 +4,6 @@ import alternativemods.awl.Main;
 import alternativemods.awl.api.logic.AbstractLogic;
 import alternativemods.awl.item.Items;
 import alternativemods.awl.tiles.TileEntityLogic;
-import alternativemods.awl.util.Point;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
@@ -24,11 +23,6 @@ public class BlockLogic extends Block {
 
         this.setBlockName("awl.blockLogic");
         this.setHardness(1.0F);
-    }
-
-    @Override
-    public void onNeighborBlockChange(World world, int x, int y, int z, Block block) {
-        Main.wiresContainer.notifyWireEnds(world, new Point(x, y, z));
     }
 
     public boolean hasTileEntity(int metadata){
@@ -64,7 +58,7 @@ public class BlockLogic extends Block {
 
     @Override
     public void breakBlock(World world, int x, int y, int z, Block block, int meta){
-        Main.logicContainer.removeLogic(world, x, y, z, world.provider.dimensionId);
+        Main.logicContainer.removeLogic(x, y, z, world.provider.dimensionId);
 
         super.breakBlock(world, x, y, z, block, meta);
     }

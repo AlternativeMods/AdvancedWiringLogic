@@ -2,7 +2,6 @@ package alternativemods.awl.manager;
 
 import alternativemods.awl.Main;
 import alternativemods.awl.api.logic.AbstractLogic;
-import net.minecraft.world.World;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,12 +24,12 @@ public class LogicContainer {
             this.logics.add(logic);
     }
 
-    public void removeLogic(World world, int x, int y, int z, int dimension) {
+    public void removeLogic(int x, int y, int z, int dimension) {
         for(int i=0; i<this.logics.size(); i++) {
             AbstractLogic lg = this.logics.get(i);
             if(lg.positionEquals(x, y, z, dimension)) {
                 this.logics.remove(lg);
-                Main.wiresContainer.removeLogic(world, lg);
+                Main.wiresContainer.removeLogic(lg);
                 break;
             }
         }

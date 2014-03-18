@@ -1,16 +1,13 @@
 package alternativemods.awl.manager;
 
-import alternativemods.awl.Main;
 import alternativemods.awl.api.logic.AbstractLogic;
 import alternativemods.awl.api.util.AbstractPoint;
 import alternativemods.awl.tiles.TileEntityLogic;
-import alternativemods.awl.util.Point;
 import alternativemods.awl.util.Wire;
 import com.google.common.collect.Lists;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,11 +27,12 @@ public class WiresContainer {
         AbstractPoint endPt = wire.points.get(wire.points.size() - 1);
         world.notifyBlocksOfNeighborChange(startPt.x, startPt.y, startPt.z, world.getBlock(startPt.x, startPt.y, startPt.z));
         world.notifyBlocksOfNeighborChange(endPt.x, endPt.y, endPt.z, world.getBlock(endPt.x, endPt.y, endPt.z));
+
         world.notifyBlockOfNeighborChange(startPt.x, startPt.y, startPt.z, world.getBlock(startPt.x, startPt.y, startPt.z));
         world.notifyBlockOfNeighborChange(endPt.x, endPt.y, endPt.z, world.getBlock(endPt.x, endPt.y, endPt.z));
+
         world.markBlockForUpdate(startPt.x, startPt.y, startPt.z);
         world.markBlockForUpdate(endPt.x, endPt.y, endPt.z);
-        notifyWireEnds(world, endPt);
     }
 
     public void addWire(Wire wire) {
@@ -59,7 +57,7 @@ public class WiresContainer {
         updateWirePoints(wire);
     }
 
-    public void removeWires(Point startPoint) {
+    public void removeWires(AbstractPoint startPoint) {
         List<Wire> toRemove = new ArrayList<Wire>();
         for(Wire wire : this.wires) {
             if(wire.points.get(0).equals(startPoint)) {
@@ -72,7 +70,7 @@ public class WiresContainer {
         }
     }
 
-    public void removeLogic(World world, AbstractLogic logic) {
+    public void removeLogic(AbstractLogic logic) {
         List<Wire> wrRemove = Lists.newArrayList();
         for(Wire wire : this.wires) {
             List<AbstractPoint> toRemove = Lists.newArrayList();
@@ -132,97 +130,7 @@ public class WiresContainer {
     }
 
     public void updatePoweredState(AbstractLogic logic, Wire wire) {
-        wire.setPowered(logic.isPowered());
-    }
-
-    public void updateLogicWires(AbstractLogic logic) {
-        for(Wire wire : this.wires)
-            if(wire.points.get(0).equals(logic))
-                wire.setPowered(logic.isPowered());
-    }
-
-    public void notifyWireEnds(World world, AbstractPoint point) {
-        if(world.isRemote)
-            return;
-
-        for(Wire wire : this.wires)
-            if(world.provider.dimensionId == wire.dimension && wire.points.get(0).equals(point)) {
-                boolean signal = world.getBlockPowerInput(point.x, point.y, point.z) > 0;
-                AbstractPoint logicEndPoint = null;
-
-                AbstractPoint endPt = wire.points.get(wire.points.size() - 1);
-                if(Main.logicContainer.isLogicAtPos(endPt.x, endPt.y, endPt.z, wire.dimension)) {
-                    AbstractLogic logic = Main.logicContainer.getLogicFromPosition(endPt.x, endPt.y, endPt.z, wire.dimension);
-                    logic.work(signal);
-                    updateLogicWires(logic);
-                    logicEndPoint = new Point(endPt.x, endPt.y, endPt.z);
-                }
-                else
-                    updatePoweredState(signal, wire);
-
-                world.notifyBlocksOfNeighborChange(endPt.x, endPt.y, endPt.z, world.getBlock(endPt.x, endPt.y, endPt.z));
-                world.notifyBlockOfNeighborChange(endPt.x, endPt.y, endPt.z, world.getBlock(endPt.x, endPt.y, endPt.z));
-                world.markBlockForUpdate(endPt.x, endPt.y, endPt.z);
-
-                if(logicEndPoint != null){
-                    notifyWireEnds(world, logicEndPoint);
-                    updateWireEndsStartingAt(world, logicEndPoint);
-                }
-            }
-    }
-
-    public void updateWireEndsStartingAt(World world, AbstractPoint point) {
-        if(world.isRemote)
-            return;
-        for(Wire wire : this.wires) {
-            if(world.provider.dimensionId != wire.dimension)
-                continue;
-
-            AbstractPoint otherPt = wire.points.get(0);
-            if(Main.logicContainer.isLogicAtPos(point.x, point.y, point.z, wire.dimension))
-                point = Main.logicContainer.getLogicFromPosition(point.x, point.y, point.z, wire.dimension);
-
-            if(!otherPt.equals(point))
-                continue;
-
-            otherPt = wire.points.get(wire.points.size() - 1);
-            world.notifyBlocksOfNeighborChange(otherPt.x, otherPt.y, otherPt.z, world.getBlock(otherPt.x, otherPt.y, otherPt.z));
-            world.notifyBlockOfNeighborChange(otherPt.x, otherPt.y, otherPt.z, world.getBlock(otherPt.x, otherPt.y, otherPt.z));
-            world.markBlockForUpdate(otherPt.x, otherPt.y, otherPt.z);
-        }
-    }
-
-    public boolean isBlockPoweredByWire(World world, int x, int y, int z, int dimension) {
-    	if(world.isRemote)
-            return false;
-
-        if(this.wires.isEmpty())
-            return false;
-
-        for(Wire wire : this.wires) {
-            if(wire.dimension != dimension)
-                continue;
-
-            if(!wire.isPowered())
-                continue;
-
-            AbstractPoint pt = new Point(x, y, z);
-            if(Main.logicContainer.isLogicAtPos(x, y, z, dimension))
-                pt = Main.logicContainer.getLogicFromPosition(x, y, z, dimension);
-
-            AbstractPoint endPt = wire.points.get(wire.points.size() - 1);
-            if(pt == null)
-                continue;
-
-            if(pt.equals(endPt) && isWireEndingAt(world, pt))
-                return true;
-
-            for(ForgeDirection dr : ForgeDirection.VALID_DIRECTIONS)
-                if(isWireEndingAt(world, new Point(x - dr.offsetX, y - dr.offsetY, z - dr.offsetZ)))
-                    return true;
-        }
-
-        return false;
+        updatePoweredState(logic.isPowered(), wire);
     }
 
 }

@@ -4,11 +4,8 @@ import alternativemods.awl.coremod.AWLCoreMod;
 import net.minecraft.launchwrapper.IClassTransformer;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
-import org.objectweb.asm.Label;
-import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.tree.*;
-
-import java.util.Iterator;
+import org.objectweb.asm.tree.ClassNode;
+import org.objectweb.asm.tree.MethodNode;
 
 /**
  * Author: Lordmau5
@@ -19,88 +16,14 @@ public class WorldTransformer implements IClassTransformer {
 
     @Override
     public byte[] transform(String name, String transformedName, byte[] basicClass){
-        if(name.equals("net.minecraft.world.World")){
+        if(name.equals("CLASS?!")){
             ClassNode classNode = new ClassNode();
             ClassReader classReader = new ClassReader(basicClass);
             classReader.accept(classNode, 0);
 
             for(MethodNode m : classNode.methods){
-                if(m.name.equals("isBlockIndirectlyGettingPowered") && m.desc.equals("(III)Z")){
-                    Iterator iter = m.instructions.iterator();
+                if(m.name.equals("METHOD?!") && m.desc.equals("DESC?!")){
 
-                    while(iter.hasNext()){
-                        AbstractInsnNode node = (AbstractInsnNode) iter.next();
-                        if(node.getOpcode() == Opcodes.ALOAD){
-                            InsnList list = new InsnList();
-
-                            Label l1 = new Label();
-
-                            list.add(new FieldInsnNode(Opcodes.GETSTATIC, "alternativemods/awl/Main", "wiresContainer", "Lalternativemods/awl/manager/WiresContainer;"));
-                            list.add(new JumpInsnNode(Opcodes.IFNULL, new LabelNode(l1)));
-
-                            list.add(new FieldInsnNode(Opcodes.GETSTATIC, "alternativemods/awl/Main", "wiresContainer", "Lalternativemods/awl/manager/WiresContainer;"));
-
-                            list.add(new VarInsnNode(Opcodes.ALOAD, 0));
-                            list.add(new VarInsnNode(Opcodes.ILOAD, 1));
-                            list.add(new VarInsnNode(Opcodes.ILOAD, 2));
-                            list.add(new VarInsnNode(Opcodes.ILOAD, 3));
-
-                            list.add(new VarInsnNode(Opcodes.ALOAD, 0));
-                            list.add(new FieldInsnNode(Opcodes.GETFIELD, "net/minecraft/world/World", "provider", "Lnet/minecraft/world/WorldProvider;"));
-                            list.add(new FieldInsnNode(Opcodes.GETFIELD, "net/minecraft/world/WorldProvider", "dimensionId", "I"));
-                            list.add(new MethodInsnNode(Opcodes.INVOKEVIRTUAL, "alternativemods/awl/manager/WiresContainer", "isBlockPoweredByWire", "(Lnet/minecraft/world/World;IIII)Z"));
-
-                            list.add(new JumpInsnNode(Opcodes.IFEQ, new LabelNode(l1)));
-
-                            list.add(new InsnNode(Opcodes.ICONST_1));
-                            list.add(new InsnNode(Opcodes.IRETURN));
-                            list.add(new LabelNode(l1));
-                            m.instructions.insertBefore(node, list);
-                            break;
-                        }
-                    }
-                }
-                if(m.name.equals("notifyBlocksOfNeighborChange") && m.desc.equals("(IIILnet/minecraft/block/Block;)V")){
-                    Iterator iter = m.instructions.iterator();
-
-                    while(iter.hasNext()){
-                        AbstractInsnNode node = (AbstractInsnNode) iter.next();
-                        if(node.getOpcode() == Opcodes.ALOAD){
-                            InsnList list = new InsnList();
-
-                            Label l1 = new Label();
-
-                            list.add(new FieldInsnNode(Opcodes.GETSTATIC, "alternativemods/awl/Main", "wiresContainer", "Lalternativemods/awl/manager/WiresContainer;"));
-                            list.add(new JumpInsnNode(Opcodes.IFNULL, new LabelNode(l1)));
-
-                            list.add(new FieldInsnNode(Opcodes.GETSTATIC, "alternativemods/awl/Main", "wiresContainer", "Lalternativemods/awl/manager/WiresContainer;"));
-                            list.add(new VarInsnNode(Opcodes.ALOAD, 0));
-                            list.add(new TypeInsnNode(Opcodes.NEW, "alternativemods/awl/util/Point"));
-                            list.add(new InsnNode(Opcodes.DUP));
-
-                            list.add(new VarInsnNode(Opcodes.ILOAD, 1));
-                            list.add(new VarInsnNode(Opcodes.ILOAD, 2));
-                            list.add(new VarInsnNode(Opcodes.ILOAD, 3));
-                            list.add(new MethodInsnNode(Opcodes.INVOKESPECIAL, "alternativemods/awl/util/Point", "<init>", "(III)V"));
-                            list.add(new MethodInsnNode(Opcodes.INVOKEVIRTUAL, "alternativemods/awl/manager/WiresContainer", "isWireStartingAt", "(Lnet/minecraft/world/World;Lalternativemods/awl/api/util/AbstractPoint;)Z"));
-
-                            list.add(new JumpInsnNode(Opcodes.IFEQ, new LabelNode(l1)));
-
-                            list.add(new FieldInsnNode(Opcodes.GETSTATIC, "alternativemods/awl/Main", "wiresContainer", "Lalternativemods/awl/manager/WiresContainer;"));
-                            list.add(new VarInsnNode(Opcodes.ALOAD, 0));
-                            list.add(new TypeInsnNode(Opcodes.NEW, "alternativemods/awl/util/Point"));
-                            list.add(new InsnNode(Opcodes.DUP));
-                            list.add(new VarInsnNode(Opcodes.ILOAD, 1));
-                            list.add(new VarInsnNode(Opcodes.ILOAD, 2));
-                            list.add(new VarInsnNode(Opcodes.ILOAD, 3));
-                            list.add(new MethodInsnNode(Opcodes.INVOKESPECIAL, "alternativemods/awl/util/Point", "<init>", "(III)V"));
-                            list.add(new MethodInsnNode(Opcodes.INVOKEVIRTUAL, "alternativemods/awl/manager/WiresContainer", "notifyWireEnds", "(Lnet/minecraft/world/World;Lalternativemods/awl/api/util/AbstractPoint;)V"));
-
-                            list.add(new LabelNode(l1));
-                            m.instructions.insertBefore(node, list);
-                            break;
-                        }
-                    }
                 }
             }
 
