@@ -80,6 +80,9 @@ public abstract class AbstractLogic extends AbstractPoint {
     public String toString(){
         return new ToStringBuilder(this)
                 .append("world", world)
+                .append("x", x)
+                .append("y", y)
+                .append("z", z)
                 .append("dimension", dimension)
                 .append("isPowered", isPowered)
                 .toString();

@@ -2,7 +2,6 @@ package alternativemods.awl.manager;
 
 import alternativemods.awl.Main;
 import alternativemods.awl.api.logic.AbstractLogic;
-import alternativemods.awl.api.util.AbstractPoint;
 import net.minecraft.world.World;
 
 import java.util.ArrayList;
@@ -42,13 +41,6 @@ public class LogicContainer {
             if(logic.positionEquals(x, y, z, dimension))
                 return logic;
         return null;
-    }
-
-    public boolean isLogicAtPos(AbstractPoint point, int dimension) {
-        for(AbstractLogic logic : this.logics)
-            if(logic.equals(point) && logic.dimension == dimension)
-                return true;
-        return false;
     }
 
     public boolean isLogicAtPos(int x, int y, int z, int dimension) {
