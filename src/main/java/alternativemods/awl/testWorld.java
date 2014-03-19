@@ -12,6 +12,7 @@ import net.minecraft.block.material.Material;
 // Bytecode Class ^-^
 
 public class testWorld extends Block {
+
     protected testWorld(Material p_i45394_1_) {
         super(p_i45394_1_);
     }

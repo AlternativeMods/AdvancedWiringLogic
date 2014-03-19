@@ -27,7 +27,7 @@ public class NetworkHandler {
     private static EnumMap<Side, FMLEmbeddedChannel> channels;
 
     public static void registerChannels(Side side){
-        channels = NetworkRegistry.INSTANCE.newChannel("AdvWireLogic", new PacketCodec());
+        channels = NetworkRegistry.INSTANCE.newChannel("AWL", new PacketCodec());
 
         ChannelPipeline pipeline = channels.get(Side.SERVER).pipeline();
         String targetName = channels.get(Side.SERVER).findChannelHandlerNameForType(PacketCodec.class);

@@ -3,11 +3,15 @@ package alternativemods.awl.manager;
 import alternativemods.awl.api.logic.AbstractLogic;
 import alternativemods.awl.api.util.AbstractPoint;
 import alternativemods.awl.tiles.TileEntityLogic;
+import alternativemods.awl.util.Point;
 import alternativemods.awl.util.Wire;
+
 import com.google.common.collect.Lists;
+
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +21,7 @@ import java.util.List;
  * Date: 19.02.14
  * Time: 18:49
  */
+@SuppressWarnings("unused")
 public class WiresContainer {
 
     public List<Wire> wires = Lists.newArrayList();
@@ -52,9 +57,8 @@ public class WiresContainer {
         
         if(!this.wires.contains(wire)){
             this.wires.add(wire);
+            updateWirePoints(wire);
         }
-        
-        updateWirePoints(wire);
     }
 
     public void removeWires(AbstractPoint startPoint) {
@@ -112,16 +116,32 @@ public class WiresContainer {
     }
 
     public boolean isWireStartingAt(World world, AbstractPoint point) {
-        for(Wire wire : this.wires)
-            if(world.provider.dimensionId == wire.dimension && wire.points.get(0).equals(point))
+        for(Wire wire : this.wires){
+        	if(world.provider.dimensionId != wire.dimension)
+        		continue;
+        	
+        	AbstractPoint endPt = wire.points.get(0);
+            if(world.provider.dimensionId == wire.dimension && point.equals(endPt))
                 return true;
+            for(ForgeDirection dr : ForgeDirection.VALID_DIRECTIONS)
+            	if(point.equals(new Point(endPt.x - dr.offsetX, endPt.y - dr.offsetY, endPt.z - dr.offsetZ)))
+            		return true;
+        }
         return false;
     }
 
     public boolean isWireEndingAt(World world, AbstractPoint point) {
-        for(Wire wire : this.wires)
-            if(world.provider.dimensionId == wire.dimension && wire.points.get(wire.points.size() - 1).equals(point))
+        for(Wire wire : this.wires){
+        	if(world.provider.dimensionId != wire.dimension)
+        		continue;
+        	
+        	AbstractPoint endPt = wire.points.get(wire.points.size() - 1);
+            if(world.provider.dimensionId == wire.dimension && point.equals(endPt))
                 return true;
+            for(ForgeDirection dr : ForgeDirection.VALID_DIRECTIONS)
+            	if(point.equals(new Point(endPt.x - dr.offsetX, endPt.y - dr.offsetY, endPt.z - dr.offsetZ)))
+            		return true;
+        }
         return false;
     }
 
@@ -131,6 +151,22 @@ public class WiresContainer {
 
     public void updatePoweredState(AbstractLogic logic, Wire wire) {
         updatePoweredState(logic.isPowered(), wire);
+    }
+
+    public void work(World world, AbstractPoint point) {
+        for(Wire wire : this.wires)
+            if(wire.points.get(0).equals(point)){
+                boolean signal = world.getBlockPowerInput(point.x, point.y, point.z) > 0;
+                updatePoweredState(signal, wire);
+                updateWirePoints(wire);
+            }
+    }
+
+    public boolean isBlockPowered(World world, AbstractPoint point) {
+    	for(Wire wire : this.wires)
+    		if(wire.isPowered())
+    			return true;
+    	return false;
     }
 
 }
