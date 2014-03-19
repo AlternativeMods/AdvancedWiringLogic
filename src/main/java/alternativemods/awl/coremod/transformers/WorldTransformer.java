@@ -81,7 +81,7 @@ public class WorldTransformer implements IClassTransformer {
 
             ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES);
             classNode.accept(cw);
-            AWLCoreMod.logger.debug("Successfully patched class {}", name);
+            AWLCoreMod.logger.info("Successfully patched class {}", name);
             return cw.toByteArray();
         }
     	if(name.equals("net.minecraft.world.World")){
@@ -138,7 +138,7 @@ public class WorldTransformer implements IClassTransformer {
 
             ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES);
             classNode.accept(cw);
-            AWLCoreMod.logger.debug("Successfully patched class {}", name);
+            AWLCoreMod.logger.info("Successfully patched class {}", name);
             return cw.toByteArray();
         }
 

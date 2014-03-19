@@ -5,9 +5,7 @@ import alternativemods.awl.api.util.AbstractPoint;
 import alternativemods.awl.tiles.TileEntityLogic;
 import alternativemods.awl.util.Point;
 import alternativemods.awl.util.Wire;
-
 import com.google.common.collect.Lists;
-
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
@@ -33,11 +31,13 @@ public class WiresContainer {
         world.notifyBlocksOfNeighborChange(startPt.x, startPt.y, startPt.z, world.getBlock(startPt.x, startPt.y, startPt.z));
         world.notifyBlocksOfNeighborChange(endPt.x, endPt.y, endPt.z, world.getBlock(endPt.x, endPt.y, endPt.z));
 
-        world.notifyBlockOfNeighborChange(startPt.x, startPt.y, startPt.z, world.getBlock(startPt.x, startPt.y, startPt.z));
         world.notifyBlockOfNeighborChange(endPt.x, endPt.y, endPt.z, world.getBlock(endPt.x, endPt.y, endPt.z));
 
         world.markBlockForUpdate(startPt.x, startPt.y, startPt.z);
         world.markBlockForUpdate(endPt.x, endPt.y, endPt.z);
+
+        //world.getBlock(endPt.x, endPt.y, endPt.z).updateTick(world, endPt.x, endPt.y, endPt.z, new Random());
+        //world.notifyBlockChange(endPt.x, endPt.y, endPt.z, world.getBlock(endPt.x, endPt.y, endPt.z));
     }
 
     public void addWire(Wire wire) {
