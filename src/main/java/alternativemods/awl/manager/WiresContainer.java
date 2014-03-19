@@ -28,16 +28,11 @@ public class WiresContainer {
         World world = MinecraftServer.getServer().worldServerForDimension(wire.dimension);
         AbstractPoint startPt = wire.points.get(0);
         AbstractPoint endPt = wire.points.get(wire.points.size() - 1);
-        world.notifyBlocksOfNeighborChange(startPt.x, startPt.y, startPt.z, world.getBlock(startPt.x, startPt.y, startPt.z));
-        world.notifyBlocksOfNeighborChange(endPt.x, endPt.y, endPt.z, world.getBlock(endPt.x, endPt.y, endPt.z));
 
         world.notifyBlockOfNeighborChange(endPt.x, endPt.y, endPt.z, world.getBlock(endPt.x, endPt.y, endPt.z));
 
-        world.markBlockForUpdate(startPt.x, startPt.y, startPt.z);
-        world.markBlockForUpdate(endPt.x, endPt.y, endPt.z);
-
-        //world.getBlock(endPt.x, endPt.y, endPt.z).updateTick(world, endPt.x, endPt.y, endPt.z, new Random());
-        //world.notifyBlockChange(endPt.x, endPt.y, endPt.z, world.getBlock(endPt.x, endPt.y, endPt.z));
+        world.notifyBlocksOfNeighborChange(startPt.x, startPt.y, startPt.z, world.getBlock(startPt.x, startPt.y, startPt.z));
+        world.notifyBlocksOfNeighborChange(endPt.x, endPt.y, endPt.z, world.getBlock(endPt.x, endPt.y, endPt.z));
     }
 
     public void addWire(Wire wire) {
@@ -57,8 +52,8 @@ public class WiresContainer {
         
         if(!this.wires.contains(wire)){
             this.wires.add(wire);
-            updateWirePoints(wire);
         }
+        updateWirePoints(wire);
     }
 
     public void removeWires(AbstractPoint startPoint) {
@@ -121,7 +116,7 @@ public class WiresContainer {
         		continue;
         	
         	AbstractPoint endPt = wire.points.get(0);
-            if(world.provider.dimensionId == wire.dimension && point.equals(endPt))
+            if(point.equals(endPt))
                 return true;
             for(ForgeDirection dr : ForgeDirection.VALID_DIRECTIONS)
             	if(point.equals(new Point(endPt.x - dr.offsetX, endPt.y - dr.offsetY, endPt.z - dr.offsetZ)))
@@ -136,7 +131,7 @@ public class WiresContainer {
         		continue;
         	
         	AbstractPoint endPt = wire.points.get(wire.points.size() - 1);
-            if(world.provider.dimensionId == wire.dimension && point.equals(endPt))
+            if(point.equals(endPt))
                 return true;
             for(ForgeDirection dr : ForgeDirection.VALID_DIRECTIONS)
             	if(point.equals(new Point(endPt.x - dr.offsetX, endPt.y - dr.offsetY, endPt.z - dr.offsetZ)))
@@ -163,9 +158,18 @@ public class WiresContainer {
     }
 
     public boolean isBlockPowered(World world, AbstractPoint point) {
-    	for(Wire wire : this.wires)
-    		if(wire.isPowered())
-    			return true;
+        for(Wire wire : this.wires)
+    		if(wire.isPowered()){
+                AbstractPoint checkPt = wire.points.get(wire.points.size() - 1);
+                if(point.equals(checkPt))
+                    return true;
+                for(ForgeDirection dr : ForgeDirection.VALID_DIRECTIONS){
+                    AbstractPoint drPoint = new Point(checkPt.x + dr.offsetX, checkPt.y + dr.offsetY, checkPt.z + dr.offsetZ);
+                    if(point.equals(drPoint))
+                        return true;
+                }
+            }
+
     	return false;
     }
 
