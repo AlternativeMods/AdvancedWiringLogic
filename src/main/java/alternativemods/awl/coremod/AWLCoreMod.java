@@ -12,7 +12,7 @@ import java.util.Map;
  * Time: 16:47
  */
 @IFMLLoadingPlugin.Name("AWL|Core")
-@IFMLLoadingPlugin.MCVersion("1.7.2")
+@IFMLLoadingPlugin.MCVersion("1.7.10")
 @IFMLLoadingPlugin.TransformerExclusions({"alternativemods.awl.coremod.transformers."})
 @SuppressWarnings("unused")
 public class AWLCoreMod implements IFMLLoadingPlugin {
